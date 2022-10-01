@@ -21,10 +21,10 @@ Just install axios and run with this repo. You will find a fast way to perform w
 
 ```
 import Captchaai from 'captchaai-npm';
-const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
-let b = await captchaai.balance()
+const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+let b = await handler.balance()
 if(b > 0){  // usd balance
-    await captchaai.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
+    await handler.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
         .then(async r => {
             if(r.error === 0)
                 console.log('got token!\n' + JSON.stringify(r.apiResponse));
