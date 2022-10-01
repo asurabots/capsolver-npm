@@ -73,6 +73,9 @@ an example is:
         "proxyPassword": "************"
     }
 
+
+
+
 *balance*
 -
 `await handler.balance()` - returns directly the float value or an error object.
@@ -111,6 +114,13 @@ an example is:
 `await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null)`
 
 `await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null)`
+
+
+currently unsupported methods:
+❌ GeeTest Task Types
+❌ ReCaptchaV2Classification
+❌ HCaptchaClassification
+
 
 # Verbose level
 
