@@ -34,7 +34,7 @@ if(b > 0){  // usd balance
 
 # What its returned
 
-All methods returns response with a simple format described below.
+All methods returns response with a simple schema described below.
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
@@ -78,47 +78,52 @@ an example is:
 
 *balance*
 -
-`await handler.balance()` - returns directly the float value or an error object.
 
-`await handler.getBalance()` - returns succes or error object.
+| Method | Returns     |
+| :-------- | :------- | 
+| `await handler.balance()` | directly the float value or an error object |
+| `await handler.getBalance()` | succes or error object |
 
 *hcaptcha*
 -
-
 **pass null instead of empty**
 
-`await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, enterprisePayload=null)`
+| Method |
+| :-------- |
+| `await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, enterprisePayload=null)` |
+| `await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, enterprisePayload=null)` |
 
-`await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, enterprisePayload=null)`
 
 *recaptcha*
 -
-`await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)`
-
-`await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)`
-
-`await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)`
-
-`await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)`
-
-`await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null)`
-
-`await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore=null)`
+| Method |
+| :-------- |
+| `await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)` |
+| `await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)` |
+| `await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)` |
+| `await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)` |
+| `await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null)` |
+| `await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore=null)` |
 
 *datadome*
 -
-`await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)`
+| Method |
+| :-------- |
+| `await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)` |
 
 *funcaptcha*
 -
-`await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null)`
+| Method |
+| :-------- |
+| `await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null)` |
+| `await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null)` |
 
-`await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null)`
+**currently unsupported methods:**
 
-
-currently unsupported methods:
 ❌ GeeTest Task Types
+
 ❌ ReCaptchaV2Classification
+
 ❌ HCaptchaClassification
 
 
