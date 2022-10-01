@@ -42,6 +42,21 @@ All methods returns response with a simple format described below.
 | `statusText` | `string` | A composed string that includes http status. |
 | `apiResponse` | `object` | Captchaai response. Task result. |
 
+success object example
+
+`{
+  error: 0,
+  statusText: '200 OK',
+  apiResponse: {
+    errorId: 0,
+    taskId: '4e6c33f5-bc14-44d0-979e-d5f37b072c59',
+    status: 'ready',
+    solution: {
+      gRecaptchaResponse: '03AIIukzgCys9brSNnrVbwXE9mTesvkxQ-ocK ...'
+    }
+  }
+}`
+
 
 # Supported API methods
 Each method is a easy way to **launch and handle a request** to captchaai API so you have to pass some args which mostly are of type string or type object. Anycase, this is described in captchaai docs page.
