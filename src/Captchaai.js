@@ -2,9 +2,12 @@ const Tasker = require("./Tasker");
 const axios = require("axios");
 
 class Captchaai {
-    constructor(apikey, verboselvl=0, reqdelay=2500) { this.apikey = apikey; this.verbose = verboselvl; this.reqdelay = reqdelay; this.init(); }
+    constructor(apikey, verboselvl=0, rqdelay=3000) { this.apikey = apikey; this.verbose = verboselvl; this.rqdelay = rqdelay; this.init(); }
 
-    init(){ if(this.verbose === 1 || this.verbose === 2) {require('console-stamp')(console, 'HH:MM:ss.l'); console.log('[' + this.constructor.name + '][Verbose level '+this.verbose+' running at: '+this.apikey+']');} }
+    init(){
+        if(this.verbose !== 0 ) { require('console-stamp')(console, 'HH:MM:ss.l'); }
+        if(this.verbose === 2){ console.log('[' + this.constructor.name + '][Verbose level '+this.verbose+' running at: '+this.apikey+']'); }
+    }
 
     async balance(){ let r = await this.getBalance(); return r.apiResponse.balance ? parseFloat(r.apiResponse.balance): null; }
 
@@ -19,12 +22,12 @@ class Captchaai {
     }
 
     attachProxy(tasker, proxyInfo){
-        tasker.taskData.proxyType = proxyInfo.proxyType;
+        if(proxyInfo.proxyType !== null || true){ tasker.taskData.proxyType = proxyInfo.proxyType; }
         tasker.taskData.proxyAddress = proxyInfo.proxyAddress;
         tasker.taskData.proxyPort = proxyInfo.proxyPort;
         if(proxyInfo.proxyLogin !== null || true){ tasker.taskData.proxyLogin = proxyInfo.proxyLogin; }
         if(proxyInfo.proxyPassword !== null || true){ tasker.taskData.proxyPassword = proxyInfo.proxyPassword; }
-        if(this.verbose === 1) { console.log('['+ this.constructor.name +'][attached proxy]['+proxyInfo.proxyAddress+':'+proxyInfo.proxyPort+']'); }
+        if(this.verbose === 1) { console.log('['+ this.constructor.name +'][proxyInfo]['+proxyInfo.proxyAddress+':'+proxyInfo.proxyPort+']'); }
         return tasker;
     }
 
@@ -37,7 +40,8 @@ class Captchaai {
         if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     async hcaptchaproxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, enterprisePayload=null){
@@ -46,7 +50,8 @@ class Captchaai {
         if(isInvisible!==null) { tasker.taskData.isInvisible = true }
         if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload }
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     // ## RECAPTCHA
@@ -58,7 +63,8 @@ class Captchaai {
         if(cookies!==null) { tasker.taskData.cookies = cookies }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     async recaptchav2proxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null){
@@ -68,7 +74,8 @@ class Captchaai {
         if(recaptchaDataSValue!==null) { tasker.taskData.recaptchaDataSValue = recaptchaDataSValue }
         if(cookies!==null) { tasker.taskData.cookies = cookies }
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     async recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null){
@@ -79,7 +86,8 @@ class Captchaai {
         if(cookies!==null) { tasker.taskData.cookies = cookies; }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     async recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null){
@@ -89,24 +97,27 @@ class Captchaai {
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         if(cookies!==null) { tasker.taskData.cookies = cookies; }
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     async recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null){
         let tasker = new Tasker('RecaptchaV3TaskProxyless', this.apikey, websiteURL, websiteKey, this.verbose);
-        tasker.taskData.pageAction = pageAction;     // APPEND SPECIAL PARAMETER
+        tasker.taskData.pageAction = pageAction;
         if(minScore!==null) { tasker.taskData.minScore = minScore; }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     async recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore=null){
         let tasker = new Tasker('RecaptchaV3TaskProxyless', this.apikey, websiteURL, websiteKey, this.verbose);
-        tasker.taskData.pageAction = pageAction;     // APPEND SPECIAL PARAMETER
+        tasker.taskData.pageAction = pageAction;
         if(minScore!==null) { tasker.taskData.minScore = minScore; }
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     // ## DATADOME
@@ -116,7 +127,8 @@ class Captchaai {
         tasker.taskData.userAgent = userAgent;
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     // ## FUNCAPTCHA
@@ -128,7 +140,8 @@ class Captchaai {
         if(data!==null) { tasker.taskData.data = data; }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
     async funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null){
@@ -138,8 +151,14 @@ class Captchaai {
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         if(data!==null) { tasker.taskData.data = data; }
         let tasked = await tasker.createTask();
-        return await tasker.getTaskResult(tasked.apiResponse.taskId);
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
+
+    // unsupported methods:
+    // ❌ GeeTest Task Types
+    // ❌ ReCaptchaV2Classification
+    // ❌ HCaptchaClassification
 
 }
 
