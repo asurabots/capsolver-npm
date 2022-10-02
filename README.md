@@ -1,8 +1,9 @@
-# captchaai api task handler
+# captchaai.io api🧠 task handler
 
 Want you to get captcha verified tokens with a simple function call in you node application?
 
 Just install axios and run with this repo. You will find a fast way to perform web testing (and simple automations).
+
 
 # Install
     npm i captchaai-npm
@@ -19,12 +20,13 @@ Just install axios and run with this repo. You will find a fast way to perform w
 
 **balance check + hcaptcha example:**
 
-```
+
+```javascript
 import Captchaai from 'captchaai-npm';
-const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
-let b = await captchaai.balance()
+const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+let b = await handler.balance()
 if(b > 0){  // usd balance
-    await captchaai.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
+    await handler.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
         .then(async r => {
             if(r.error === 0)
                 console.log('got token!\n' + JSON.stringify(r.apiResponse));
@@ -34,13 +36,30 @@ if(b > 0){  // usd balance
 
 # What its returned
 
-All methods returns response with a simple format described below.
+All methods returns response with a simple schema described below.
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
 | `error` | `number` | [*-1*] Request or captcha **error**. [*0*] **Success** solving. |
 | `statusText` | `string` | A composed string that includes http status. |
 | `apiResponse` | `object` | Captchaai response. Task result. |
+
+success object example
+
+```javascript
+{
+  error: 0,
+  statusText: '200 OK',
+  apiResponse: {
+    errorId: 0,
+    taskId: '4e6c33f5-bc14-44d0-979e-d5f37b072c59',
+    status: 'ready',
+    solution: {
+      gRecaptchaResponse: '03AIIukzgCys9brSNnrVbwXE9mTesvkxQ-ocK ...'
+    }
+  }
+}
+```
 
 
 # Supported API methods
@@ -49,6 +68,7 @@ Each method is a easy way to **launch and handle a request** to captchaai API so
 
 an example is:
 
+```javascript
     const proxyInfo = // proxyInfo schema for non-proxyless methods.
     {
         "proxyType": 'http',
@@ -57,45 +77,61 @@ an example is:
         "proxyLogin": "******",
         "proxyPassword": "************"
     }
+```
+
+
 
 *balance*
 -
-`await handler.balance()` - returns directly the float value or an error object.
 
-`await handler.getBalance()` - returns succes or error object.
+| Method | Returns     |
+| :-------- | :------- | 
+| `await handler.balance()` | directly the float value or an error object |
+| `await handler.getBalance()` | succes or error object |
 
 *hcaptcha*
 -
-
 **pass null instead of empty**
 
-`await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, enterprisePayload=null)`
+| Method |
+| :-------- |
+| `await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, enterprisePayload=null)` |
+| `await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, enterprisePayload=null)` |
 
-`await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, enterprisePayload=null)`
 
 *recaptcha*
 -
-`await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)`
-
-`await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)`
-
-`await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)`
-
-`await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)`
-
-`await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null)`
-
-`await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore=null)`
+| Method |
+| :-------- |
+| `await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)` |
+| `await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)` |
+| `await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)` |
+| `await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)` |
+| `await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null)` |
+| `await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore=null)` |
 
 *datadome*
 -
-`await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)`
+| Method |
+| :-------- |
+| `await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)` |
 
 *funcaptcha*
 -
-`await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null)`
+| Method |
+| :-------- |
+| `await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null)` |
+| `await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null)` |
 
-`await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null)`
+**currently unsupported methods:**
+
+❌ GeeTest Task Types
+
+❌ ReCaptchaV2Classification
+
+❌ HCaptchaClassification
+
+*❌ It has not been tested in big larger workloads or in a multithreading environment. (supposed to come soon)*
 
 # Verbose level
 
@@ -110,7 +146,11 @@ Verbose level `1`: Print logs about performed requests during execution.
 Verbose level `2`: Appends full captchaai api response in verbose level 1 outputs.
 
 # More code examples
-```
+[! Building fast test-project with captchaai-npm](https://www.youtube.com/watch?v=s9OyE_pBPyE)
+
+proxyInfo use example:
+
+```javascript
 import Captchaai from 'captchaai-npm';
 const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 await captchaai.recaptchav3(
