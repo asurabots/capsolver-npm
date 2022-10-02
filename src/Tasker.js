@@ -22,7 +22,6 @@ class Tasker {
                 return { 'error':0, 'statusText':response.status+' '+response.statusText, 'apiResponse':response.data }
             })
             .catch(function (error) {
-                process.exit(0)
                 if(error.response === undefined){ return { 'error':-1, 'statusText':JSON.stringify(error), 'apiResponse':'' } }
                 if(self.verbose === 2){ console.log(error.response.data); }
                 return { 'error':-1, 'statusText':error.response.status+' '+error.response.statusText, 'apiResponse':error.response.data }
@@ -35,8 +34,6 @@ class Tasker {
                 console.log('[' + this.taskData.type + '][' + axiosConfig.method + '][' + axiosConfig.url + ']['+r.statusText+'][for: '+this.taskData.websiteURL+'][OK][taskId: '+r.apiResponse.taskId+']');
             }
         }
-
-        // if(r.error !== 0) process.exit(0);
         return r;
     }
 
