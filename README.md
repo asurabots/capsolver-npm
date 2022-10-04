@@ -1,14 +1,14 @@
 # captchaai.io api🧠 task handler
 
 
+
 Want you to get captcha verified tokens with a simple function call in you node application?
 
 Just install axios and run with this repo. You will find a fast way to perform web testing (and simple automations).
 
-
-# Install
+[![website - captchaai.io](https://img.shields.io/badge/website-captchaai.io-4967dd)](https://captchaai.io/)
 [![1.1.0 - captchaai-npm](https://img.shields.io/static/v1?label=1.1.0&message=captchaai-npm&color=%234075D9&logo=npm)](https://www.npmjs.com/package/captchaai-npm)
-
+# Install
     npm i captchaai-npm
 
 # Usage
@@ -134,7 +134,7 @@ an example is:
 
 ❌ HCaptchaClassification
 
-*❌ It has not been tested in big larger workloads or in a multithreading environment. (supposed to come soon)*
+*❌ It has not been tested in larger workloads or in a multithreading environment. (supposed to come soon, appreciate any feedback🙏)*
 
 # Verbose level
 
