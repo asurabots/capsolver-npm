@@ -1,3 +1,4 @@
+const TaskValidator = require("./TaskValidator");
 const Tasker = require("./Tasker");
 const axios = require("axios");
 
@@ -15,9 +16,9 @@ class Captchaai {
         let self = this;
         let axiosConfig = { method: 'post', url: 'https://api.captchaai.io/getBalance', headers: { }, data: { "clientKey": this.apikey } };
         let r = await axios(axiosConfig)
-            .then(async function (response) { return { 'error':0, 'message':response.status+' '+response.statusText, 'apiResponse':response.data } })
-            .catch(function (error) { return { 'error':-1, 'message':error.response.status+' '+error.response.statusText, 'apiResponse':error.response.data } });
-        if(this.verbose === 1 || this.verbose === 2) { console.log('[' + self.constructor.name + '][' + axiosConfig.method + '][' + axiosConfig.url + ']['+r.message+'][balance: '+r.apiResponse.balance+' usd]'); }
+            .then(async function (response) { return { 'error':0, 'statusText':response.status+' '+response.statusText, 'apiResponse':response.data } })
+            .catch(function (error) { return { 'error':-1, 'statusText':error.response.status+' '+error.response.statusText, 'apiResponse':error.response.data } });
+        if(this.verbose !== 0) { console.log('[' + self.constructor.name + '][' + axiosConfig.method + '][' + axiosConfig.url + ']['+r.message+'][balance: '+r.apiResponse.balance+' usd]'); }
         return r;
     }
 
@@ -31,7 +32,8 @@ class Captchaai {
         return tasker;
     }
 
-    // ## HCAPTCHA
+    // ## fast-bind commands ## //
+    // hcap
     async hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, enterprisePayload=null){
         let tasker = new Tasker('HCaptchaTask', this.apikey, websiteURL, websiteKey, this.verbose);
         // binding
@@ -54,7 +56,7 @@ class Captchaai {
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
-    // ## RECAPTCHA
+    // recap
     async recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null){
         let tasker = new Tasker('RecaptchaV2Task', this.apikey, websiteURL, websiteKey, this.verbose);
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent }
@@ -120,7 +122,7 @@ class Captchaai {
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
-    // ## DATADOME
+    // datadome
     async datadome(websiteURL, userAgent, captchaUrl, proxyInfo){
         let tasker = new Tasker('DataDomeSliderTask', this.apikey, websiteURL, null, this.verbose);
         tasker.taskData.captchaUrl = captchaUrl;
@@ -131,7 +133,7 @@ class Captchaai {
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
-    // ## FUNCAPTCHA
+    // funcap
     async funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null){
         let tasker = new Tasker('FunCaptchaTask', this.apikey, websiteURL, null, this.verbose);
         tasker.taskData.websitePublicKey = websitePublicKey;
