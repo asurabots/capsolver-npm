@@ -157,8 +157,37 @@ class Captchaai {
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
+    // geetest
+    async geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version=null, userAgent=null, geetestGetLib=null, initParameters=null){
+        let tasker = new Tasker('GeeTestTask', this.apikey, websiteURL, null, this.verbose);
+        tasker.taskData.gt = gt;
+        tasker.taskData.challenge = challenge;
+        tasker.taskData.geetestApiServerSubdomain = geetestApiServerSubdomain;
+        if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
+        if(geetestGetLib!==null) { tasker.taskData.geetestGetLib = geetestGetLib; }
+        if(version!==null) { tasker.taskData.version = version; }
+        if(initParameters!==null) { tasker.taskData.initParameters = initParameters; }
+        this.attachProxy(tasker, proxyInfo);
+        let tasked = await tasker.createTask();
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+    }
+
+    async geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version=null, userAgent=null, geetestGetLib=null, initParameters=null){
+        let tasker = new Tasker('GeeTestTaskProxyless', this.apikey, websiteURL, null, this.verbose);
+        tasker.taskData.gt = gt;
+        tasker.taskData.challenge = challenge;
+        tasker.taskData.geetestApiServerSubdomain = geetestApiServerSubdomain;
+        if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
+        if(geetestGetLib!==null) { tasker.taskData.geetestGetLib = geetestGetLib; }
+        if(version!==null) { tasker.taskData.version = version; }
+        if(initParameters!==null) { tasker.taskData.initParameters = initParameters; }
+        let tasked = await tasker.createTask();
+        if(tasked.error === -1) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+    }
+
     // unsupported methods:
-    // ❌ GeeTest Task Types
     // ❌ ReCaptchaV2Classification
     // ❌ HCaptchaClassification
 
