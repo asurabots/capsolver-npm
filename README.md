@@ -126,9 +126,15 @@ an example is:
 | `await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null)` |
 | `await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null)` |
 
-**currently unsupported methods:**
+*geetest*
+-
+| Method                                                                                                                                                          |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `await handler.geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version=null, userAgent=null, geetestGetLib=null, initParameters=null)` |
+| `await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version=null, userAgent=null, geetestGetLib=null, initParameters=null)`   |
 
-❌ GeeTest Task Types
+
+**currently unsupported methods:**
 
 ❌ ReCaptchaV2Classification
 
