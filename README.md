@@ -6,8 +6,8 @@ Want you to get captcha verified tokens with a simple function call in you node 
 
 Just install axios and run with this repo. You will find a fast way to perform web testing (and simple automations).
 
-[![website - captchaai.io](https://img.shields.io/badge/website-captchaai.io-4967dd)](https://captchaai.io/)
-[![1.1.0 - captchaai-npm](https://img.shields.io/static/v1?label=1.1.0&message=captchaai-npm&color=%234075D9&logo=npm)](https://www.npmjs.com/package/captchaai-npm)
+[![1.2.0 - captchaai-npm](https://img.shields.io/badge/provider-captchaai.io-blue)](https://www.captchaai.io/)
+[![1.2.0 - captchaai-npm](https://img.shields.io/badge/1.2.0-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
 # Install
     npm i captchaai-npm
 
@@ -21,8 +21,12 @@ Just install axios and run with this repo. You will find a fast way to perform w
 
 `const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);`
 
-**balance check + hcaptcha example:**
 
+**👀There are 2 different versions in order to handle task results:**
+
+**Version 1: fast-bind methods**
+
+*balance check + `.hcaptchaproxyless()` example:*
 
 ```javascript
 import Captchaai from 'captchaai-npm';
@@ -37,6 +41,38 @@ if(b > 0){  // usd balance
 }
 ```
 
+**Version 2: `.runAnyTask(taskData)`**
+
+
+
+*proxyless example*
+```javascript
+import Captchaai from 'captchaai-npm';
+const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+const taskData =
+    { type : 'HCaptchaTaskProxyless', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000' }
+handler.runAnyTask(taskData).then(response => { console.log(response); });
+```
+
+*proxyInfo example*
+```javascript
+import Captchaai from 'captchaai-npm';
+const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+const taskData =
+    { type : 'HCaptchaTask', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000',
+            proxyInfo: {
+                "proxyType": 'http',
+                "proxyAddress": 'proxy.provider.io',
+                "proxyPort": 32221,
+                "proxyLogin": "******",
+                "proxyPassword": "************"
+            }
+    }
+handler.runAnyTask(taskData).then(response => { console.log(response); });
+```
+
+
+
 # What its returned
 
 All methods returns response with a simple schema described below.
@@ -47,7 +83,7 @@ All methods returns response with a simple schema described below.
 | `statusText` | `string` | A composed string that includes http status. |
 | `apiResponse` | `object` | Captchaai response. Task result. |
 
-success object example
+✅success object example
 
 ```javascript
 {
@@ -64,24 +100,34 @@ success object example
 }
 ```
 
+❌ invalid task example
+```javascript
+{
+  error: -1,
+  statusText: '400 Bad Request',
+  apiResponse: {
+        errorCode: "ERROR_INVALID_TASK_DATA",
+        errorDescription: "clientKey error",
+        errorId: 1
+    }
+}
+```
 
 # Supported API methods
 Each method is a easy way to **launch and handle a request** to captchaai API so you have to pass some args which mostly are of type string or type object. Anycase, this is described in captchaai docs page.
 [**reffered docs.**](https://docs.captchaai.io/)
 
-an example is:
 
-```javascript
-    const proxyInfo = // proxyInfo schema for non-proxyless methods.
-    {
-        "proxyType": 'http',
-        "proxyAddress": 'proxy.provider.io',
-        "proxyPort": 32221,
-        "proxyLogin": "******",
-        "proxyPassword": "************"
-    }
-```
 
+
+
+| Method                               | Returns                                                                                                                                                               |
+|:-------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `await handler.runAnyTask(taskData)` | handle tasks for a determined taskData. In order to build this object, use [**!reffered docs**](https://docs.captchaai.io/) and check parameters by catpcha task type |
+
+* taskData examples are shown above.
+
+* proxy credentials must be passed as `proxyInfo` schema shown above too.
 
 
 *balance*
@@ -91,6 +137,10 @@ an example is:
 | :-------- | :------- | 
 | `await handler.balance()` | directly the float value or an error object |
 | `await handler.getBalance()` | succes or error object |
+
+
+
+
 
 *hcaptcha*
 -
@@ -170,6 +220,3 @@ await captchaai.recaptchav3(
     ,'sign_in'	// required in recaptchav3
 ).then(response => { console.log(response); })
 ```
-
-[this is a list of simple scripts I built with it](https://imgur.com/a/jVRPsO6)
-
