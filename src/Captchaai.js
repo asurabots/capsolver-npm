@@ -1,13 +1,33 @@
-// const TaskValidator = require("./TaskValidator");
 const Tasker = require("./Tasker");
 const axios = require("axios");
 
 class Captchaai {
-    constructor(apikey, verboselvl=0, rqdelay=3000) { this.apikey = apikey; this.verbose = verboselvl; this.rqdelay = rqdelay; this.init(); }
+    constructor(apikey, verboselvl=0, rqdelay=2500) { this.apikey = apikey; this.verbose = verboselvl; this.rqdelay = rqdelay; this.init(); }
 
     init(){
         if(this.verbose !== 0 ) { require('console-stamp')(console, 'HH:MM:ss.l'); }
         if(this.verbose === 2){ console.log('[' + this.constructor.name + '][Verbose level '+this.verbose+' running at: '+this.apikey+']'); }
+    }
+
+    async runAnyTask(taskData) {
+        if(taskData.hasOwnProperty('type')){
+            let tasker = new Tasker(null, this.apikey, null, null, this.verbose);
+            if(tasker.validate(taskData)){
+                tasker.taskData = taskData;
+
+                if(taskData.hasOwnProperty('proxyInfo')){
+                    this.attachProxy(tasker, taskData.proxyInfo);
+                }
+
+                let tasked = await tasker.createTask();
+                if(tasked.error !== 0) return tasked;
+                return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+            }else{
+                return;
+            }
+        }else{
+            throw TypeError('taskData has not type property.');
+        }
     }
 
     async balance(){ let r = await this.getBalance(); return r.apiResponse.balance ? parseFloat(r.apiResponse.balance): null; }
@@ -42,7 +62,7 @@ class Captchaai {
         if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -52,7 +72,7 @@ class Captchaai {
         if(isInvisible!==null) { tasker.taskData.isInvisible = true }
         if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload }
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -65,7 +85,7 @@ class Captchaai {
         if(cookies!==null) { tasker.taskData.cookies = cookies }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -76,7 +96,7 @@ class Captchaai {
         if(recaptchaDataSValue!==null) { tasker.taskData.recaptchaDataSValue = recaptchaDataSValue }
         if(cookies!==null) { tasker.taskData.cookies = cookies }
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -88,7 +108,7 @@ class Captchaai {
         if(cookies!==null) { tasker.taskData.cookies = cookies; }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -99,7 +119,7 @@ class Captchaai {
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         if(cookies!==null) { tasker.taskData.cookies = cookies; }
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -109,7 +129,7 @@ class Captchaai {
         if(minScore!==null) { tasker.taskData.minScore = minScore; }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -118,7 +138,7 @@ class Captchaai {
         tasker.taskData.pageAction = pageAction;
         if(minScore!==null) { tasker.taskData.minScore = minScore; }
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -129,7 +149,7 @@ class Captchaai {
         tasker.taskData.userAgent = userAgent;
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -142,7 +162,7 @@ class Captchaai {
         if(data!==null) { tasker.taskData.data = data; }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -153,7 +173,7 @@ class Captchaai {
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         if(data!==null) { tasker.taskData.data = data; }
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -169,7 +189,7 @@ class Captchaai {
         if(initParameters!==null) { tasker.taskData.initParameters = initParameters; }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
@@ -183,7 +203,7 @@ class Captchaai {
         if(version!==null) { tasker.taskData.version = version; }
         if(initParameters!==null) { tasker.taskData.initParameters = initParameters; }
         let tasked = await tasker.createTask();
-        if(tasked.error === -1) return tasked;
+        if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
