@@ -15,11 +15,13 @@ Just install axios and run with this repo. You will find a fast way to perform w
 
 1. Import module.
 
-`import Captchaai from 'captchaai-npm';`
+`import Captchaai from 'captchaai-npm'; // import as ES6 module`
 
-2. Declare singleton.
+`const Captchaai = require('captchaai-npm'); // using require`
 
-`const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);`
+2. Declare singleton/handler.
+
+`const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX', 1);`
 
 
 **👀There are 2 different versions in order to handle task results:**
@@ -29,8 +31,8 @@ Just install axios and run with this repo. You will find a fast way to perform w
 *balance check + `.hcaptchaproxyless()` example:*
 
 ```javascript
-import Captchaai from 'captchaai-npm';
-const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+import Captchaai from 'captchaai-npm';  // import as ES6 module
+const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX', 1);
 let b = await handler.balance()
 if(b > 0){  // usd balance
     await handler.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
@@ -48,7 +50,7 @@ if(b > 0){  // usd balance
 *proxyless example*
 ```javascript
 import Captchaai from 'captchaai-npm';
-const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX', 1);
 const taskData =
     { type : 'HCaptchaTaskProxyless', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000' }
 handler.runAnyTask(taskData).then(response => { console.log(response); });
@@ -57,7 +59,7 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 *proxyInfo example*
 ```javascript
 import Captchaai from 'captchaai-npm';
-const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX', 1);
 const taskData =
     { type : 'HCaptchaTask', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000',
             proxyInfo: {
@@ -211,7 +213,7 @@ proxyInfo use example:
 
 ```javascript
 import Captchaai from 'captchaai-npm';
-const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX');
 await captchaai.recaptchav3(
     'https://websiteurl.com/', '0000000000000_0000000',
     {	// proxyInfo
