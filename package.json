@@ -1,6 +1,6 @@
 {
   "name": "captchaai-npm",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "main": "src/Captchaai.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/0qwertyy/captchaai-npm.git"
   },
-  "keywords": [],
+  "keywords": ["recaptcha", "hcaptcha", "funcaptcha", "datadome", "geetest", "puppeteer-extra", "captcha-solver", "2captcha", "captchaai.io", "capmonster"],
   "author": "0qwertyy",
   "license": "ISC",
   "bugs": {
@@ -22,4 +22,3 @@
     "console-stamp": "^3.0.6"
   }
 }
-

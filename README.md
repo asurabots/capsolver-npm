@@ -1,27 +1,33 @@
 # captchaai.io api🧠 task handler
 
+Want you to get captcha verified tokens with a simple function call in your NodeJS application?
 
+Just install Axios and run with this repo. You will find a fast way to perform some automations (maybe with puppeteer).
 
-Want you to get captcha verified tokens with a simple function call in you node application?
+❗ *An API key is required.*
 
-Just install axios and run with this repo. You will find a fast way to perform web testing (and simple automations).
+🔥 *HCaptcha Image Classification its now supported.*
 
-[![1.2.0 - captchaai-npm](https://img.shields.io/badge/provider-captchaai.io-blue)](https://www.captchaai.io/)
-[![1.2.0 - captchaai-npm](https://img.shields.io/badge/1.2.0-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
-# Install
+[![](https://img.shields.io/badge/1.2.1-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
+[![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://www.captchaai.io/)
+
+# ⬇️Install
     npm i captchaai-npm
 
-# Usage
+# ✋Usage
 
 1. Import module.
 
-`import Captchaai from 'captchaai-npm'; // import as ES6 module`
+   ```javascript 
+    const Captchaai = require('captchaai-npm');
+    ```
 
-`const Captchaai = require('captchaai-npm'); // using require`
+3. Declare singleton/handler.
 
-2. Declare singleton/handler.
+   ```javascript 
+    const handler = new Captchaai(apikey); // task handler / solver
+    ```
 
-`const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX', 1);`
 
 
 **👀There are 2 different versions in order to handle task results:**
@@ -31,8 +37,8 @@ Just install axios and run with this repo. You will find a fast way to perform w
 *balance check + `.hcaptchaproxyless()` example:*
 
 ```javascript
-import Captchaai from 'captchaai-npm';  // import as ES6 module
-const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+const Captchaai = require('captchaai-npm');
+const handler = new Captchaai('apikey', 1); // verbose level 1
 let b = await handler.balance()
 if(b > 0){  // usd balance
     await handler.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
@@ -45,21 +51,19 @@ if(b > 0){  // usd balance
 
 **Version 2: `.runAnyTask(taskData)`**
 
-
-
-*proxyless example*
+*example: build proxyless `taskData` schema for HCaptcha.*
 ```javascript
-import Captchaai from 'captchaai-npm';
-const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+const Captchaai = require('captchaai-npm');
+const handler = new Captchaai('apikey');
 const taskData =
     { type : 'HCaptchaTaskProxyless', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000' }
-handler.runAnyTask(taskData).then(response => { console.log(response); });
+await handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
-*proxyInfo example*
+*example: build custom proxy `taskData` schema for HCaptcha.*
 ```javascript
-import Captchaai from 'captchaai-npm';
-const handler = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+const Captchaai = require('captchaai-npm');
+const handler = new Captchaai('apikey');
 const taskData =
     { type : 'HCaptchaTask', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000',
             proxyInfo: {
@@ -73,9 +77,7 @@ const taskData =
 handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
-
-
-# What its returned
+# ↩️What its returned
 
 All methods returns response with a simple schema described below.
 
@@ -83,7 +85,7 @@ All methods returns response with a simple schema described below.
 | :-------- | :------- | :------------------------- |
 | `error` | `number` | [*-1*] Request or captcha **error**. [*0*] **Success** solving. |
 | `statusText` | `string` | A composed string that includes http status. |
-| `apiResponse` | `object` | Captchaai response. Task result. |
+| `apiResponse` | `object` | Captchaai response. Task result! |
 
 ✅success object example
 
@@ -102,7 +104,7 @@ All methods returns response with a simple schema described below.
 }
 ```
 
-❌ invalid task example
+❌invalid task example
 ```javascript
 {
   error: -1,
@@ -115,12 +117,9 @@ All methods returns response with a simple schema described below.
 }
 ```
 
-# Supported API methods
+# ⚙️Supported API methods
 Each method is a easy way to **launch and handle a request** to captchaai API so you have to pass some args which mostly are of type string or type object. Anycase, this is described in captchaai docs page.
 [**reffered docs.**](https://docs.captchaai.io/)
-
-
-
 
 
 | Method                               | Returns                                                                                                                                                               |
@@ -146,13 +145,13 @@ Each method is a easy way to **launch and handle a request** to captchaai API so
 
 *hcaptcha*
 -
-**pass null instead of empty**
+***pass null instead of empty for any argument***
 
 | Method |
 | :-------- |
 | `await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, enterprisePayload=null)` |
 | `await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, enterprisePayload=null)` |
-
+| `await handler.hcaptchaclassification(question, queries, coordinate=true) // 🆕🔥 queries its a base64 images array` |
 
 *recaptcha*
 -
@@ -186,34 +185,32 @@ Each method is a easy way to **launch and handle a request** to captchaai API so
 | `await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version=null, userAgent=null, geetestGetLib=null, initParameters=null)`   |
 
 
-**currently unsupported methods:**
+**Currently unsupported API methods:**
 
 ❌ ReCaptchaV2Classification
-
-❌ HCaptchaClassification
-
-*❌ It has not been tested in larger workloads or in a multithreading environment. (supposed to come soon, appreciate any feedback🙏)*
+❌ ImageToTextTask
+❌ AntiKasadaTask
+❌ AntiAkamaiBMPTask
 
 # Verbose level
 
 When singleton is initialized, verbose level must be passed as 2nd argument. Default is 0.
 
-    new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 1);
+    const apikey = 'CAI-XXX...';
+    const handler = new Captchaai(apikey, 1);
 
-Verbose level `undefined`: Dont print logs, just get response.
+Verbose level `undefined || 0`: Dont print logs, just get response.
 
 Verbose level `1`: Print logs about performed requests during execution.
 
 Verbose level `2`: Appends full captchaai api response in verbose level 1 outputs.
 
 # More code examples
-[! Building fast test-project with captchaai-npm](https://www.youtube.com/watch?v=s9OyE_pBPyE)
-
-proxyInfo use example:
 
 ```javascript
-import Captchaai from 'captchaai-npm';
-const captchaai = new Captchaai('CAI-XXXXXXXXXXXXXXXXXXXXXXXXX');
+import Captchaai from 'captchaai-npm'; // import as ES6 module
+const apikey = 'CAI-XXX...';
+const captchaai = new Captchaai(apikey);
 await captchaai.recaptchav3(
     'https://websiteurl.com/', '0000000000000_0000000',
     {	// proxyInfo
@@ -222,3 +219,5 @@ await captchaai.recaptchav3(
     ,'sign_in'	// required in recaptchav3
 ).then(response => { console.log(response); })
 ```
+
+[*Building fast test-project with captchaai-npm](https://www.youtube.com/watch?v=s9OyE_pBPyE)
