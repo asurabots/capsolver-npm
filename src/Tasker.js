@@ -32,13 +32,7 @@ class Tasker {
                 return { 'error':-1, 'statusText':error.response.status, 'apiResponse':error.response.data }
             });
 
-        if(this.verbose === 1 || this.verbose === 2){
-            if(r.error === undefined ||  r.error === -1){
-                console.log('[' + this.taskData.type + ']['+r.statusText+'][' + axiosConfig.url + '][website: '+this.taskData.websiteURL+'][ ❌ ][error: '+r.apiResponse.errorDescription+']');
-            }else{
-                console.log('[' + this.taskData.type + ']['+r.statusText+'][' + axiosConfig.url + '][website: '+this.taskData.websiteURL+'][taskId]['+r.apiResponse.taskId+']');
-            }
-        }
+        if(this.verbose === 1 || this.verbose === 2){ console.log('[' + this.taskData.type + ']['+r.statusText+'][' + axiosConfig.url + ']'); }
         return r;
     }
 
