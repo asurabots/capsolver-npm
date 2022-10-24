@@ -16,7 +16,7 @@ class Validation {
                 { name:"userAgent", required: false, type: 'string' }, { name:"isInvisible", required: false, type: 'boolean' },
                 { name:"isEnterprise", required: false, type: 'boolean' }, { name:"enterprisePayload", required: false, type: 'object' },
             ];
-        this.parameters.HCaptchaClassification = [ { name:"question", required: true, type: 'string' }, { name:"images", required: true, type: 'object' } ];
+        this.parameters.HCaptchaClassification = [ { name:"question", required: true, type: 'string' }, { name:"queries", required: true, type: 'object' } ];
         this.parameters.RecaptchaV2Task =
             [
                 { name:"websiteURL", required: true, type: 'string' }, { name:"websiteKey", required: true, type: 'string' },

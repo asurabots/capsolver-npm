@@ -209,7 +209,15 @@ class Captchaai {
 
     // unsupported methods:
     // ❌ ReCaptchaV2Classification
-    // ❌ HCaptchaClassification
+    // ✅ HCaptchaClassification (added on 1.2.1)
+
+    async hcaptchaclassification(question, base64, coordinate=true){
+        let tasker = new Tasker('HCaptchaClassification', this.apikey, null, null, this.verbose);
+        tasker.taskData.queries = base64;
+        tasker.taskData.question = question;
+        tasker.taskData.coordinate = coordinate;
+        return await tasker.createTask();
+    }
 
 }
 
