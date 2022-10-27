@@ -10,6 +10,9 @@ class Tasker {
         this.taskData = { "type":type, "websiteURL": websiteURL , "websiteKey": websiteKey };
     }
 
+    /**
+     * Send createTask request with specific data
+     */
     async createTask() {
         let self = this;
         if(this.taskData.websiteURL === null) delete this.taskData.websiteURL;
@@ -36,6 +39,11 @@ class Tasker {
         return r;
     }
 
+    /**
+     * Wait task to finish with results
+     * @param {string} taskId - new task id generated
+     * @param {number} rqDelay - retrieve results requesting delay in ms
+     */
     async getTaskResult(taskId, rqDelay){
         let self = this; let status = ''; let fails = 0; let r = null;
         if(taskId === undefined) return;
@@ -68,6 +76,10 @@ class Tasker {
         return r;
     }
 
+    /**
+     * Validate requested task schema required parameters
+     * @param {object} taskData - task schema
+     */
     validate(taskData){
         if(Object.keys(this.parameters).includes(taskData.type)){ // ?is a existing captcha task
             this.parameters[taskData.type].forEach(parameter => {
