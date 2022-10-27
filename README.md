@@ -109,7 +109,7 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 
 ✅Success object example:
 
-```json
+```javascript
 {
   error: 0,
   statusText: '200 OK',
@@ -125,7 +125,7 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
 ❌Invalid task object example:
-```json
+```javascript
 {
   error: -1,
   statusText: '400 Bad Request',
