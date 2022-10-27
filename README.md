@@ -2,19 +2,21 @@
 
 Want you to get captcha verified tokens with a simple function call in your NodeJS application?
 
-Just install Axios and run with this repo. You will find a fast way to perform some automations (maybe with puppeteer).
+Just install Axios and run with this repo. You will find a fast way to perform some automations.
 
-❗ *An API key is required.*
+- **Manage to solve captcha challenges with AI. ([Captcha service](https://captchaai.io/) based)**
+- ❗❗ An API key is **required**.
+- 🔥 *HCaptcha Image Classification it's now supported.*
 
-🔥 *HCaptcha Image Classification its now supported.*
 
-[![](https://img.shields.io/badge/1.2.1-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
-[![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://www.captchaai.io/)
+[![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
+[![](https://img.shields.io/badge/1.2.2-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
+[![](https://img.shields.io/badge/API_doc-captchaai.atlassian.net-blue)](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/393295/All+task+types+and+price+list)
 
-# ⬇️Install
+# ⬇️ Install
     npm i captchaai-npm
 
-# ✋Usage
+# ✋ Usage
 
 1. Import module.
 
@@ -30,66 +32,84 @@ Just install Axios and run with this repo. You will find a fast way to perform s
 
 
 
-**👀There are 2 different versions in order to handle task results:**
+**❗ There are 2 different versions in order to handle task results:**
 
-**Version 1: fast-bind methods**
+**1️⃣ fast-bind methods**
 
-*balance check + `.hcaptchaproxyless()` example:*
+*example: balance check + `.hcaptchaproxyless()`*
 
 ```javascript
 const Captchaai = require('captchaai-npm');
 const handler = new Captchaai('apikey', 1); // verbose level 1
-let b = await handler.balance()
+let b = await handler.balance();
 if(b > 0){  // usd balance
     await handler.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
         .then(async r => {
             if(r.error === 0)
                 console.log('got token!\n' + JSON.stringify(r.apiResponse));
-        })
+        });
 }
 ```
 
-**Version 2: `.runAnyTask(taskData)`**
+*example: handle for hcaptcha task with `.hcaptcha()` using custom proxy server.*
 
-*example: build proxyless `taskData` schema for HCaptcha.*
+```javascript
+const Captchaai = require('captchaai-npm');
+const handler = new Captchaai('apikey', 1); // verbose level 1
+let b = await handler.balance();
+if(b > 0){  // usd balance
+    await handler.hcaptchaproxyless(
+        'https://websiteurl.com/', 
+        '000000-000000000-0000000',
+        { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" }   // 2nd proxyInfo format
+    )
+     .then(async r => {
+         if(r.error === 0)
+             console.log('got token!\n' + JSON.stringify(r.apiResponse));
+     });
+}
+```
+
+**2️⃣ `.runAnyTask(taskData)`**
+
+
+*example: build proxyless `taskData` schema performing HCaptchaTaskProxyless.*
 ```javascript
 const Captchaai = require('captchaai-npm');
 const handler = new Captchaai('apikey');
-const taskData =
+const taskData = 
     { type : 'HCaptchaTaskProxyless', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000' }
 await handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
-*example: build custom proxy `taskData` schema for HCaptcha.*
+*example: build custom proxy `taskData` schema for HCaptchaTask.*
 ```javascript
 const Captchaai = require('captchaai-npm');
 const handler = new Captchaai('apikey');
 const taskData =
-    { type : 'HCaptchaTask', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000',
-            proxyInfo: {
-                "proxyType": 'http',
-                "proxyAddress": 'proxy.provider.io',
-                "proxyPort": 32221,
-                "proxyLogin": "******",
-                "proxyPassword": "************"
-            }
+    { 
+    type : 'HCaptchaTask',
+    websiteURL : 'https://website.com/', 
+    websiteKey : '000000-00000-000000-000000000',
+    // proxyInfo: { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" }, // also string format is supported with `proxy`
+    proxyInfo: { 'proxyType': 'http', 'proxyAddress': 'ip_address', 'proxyPort': 3221, 'proxyLogin': 'username', 'proxyPassword': 'password' },
     }
 handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
-# ↩️What its returned
+# ↩️ Returned object:
 
-All methods returns response with a simple schema described below.
+**All methods return the following schema.**
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `error` | `number` | [*-1*] Request or captcha **error**. [*0*] **Success** solving. |
-| `statusText` | `string` | A composed string that includes http status. |
-| `apiResponse` | `object` | Captchaai response. Task result! |
+| `error` | `number` | [*-1*] Request/solving **error**. [*0*] **Success** solving. |
+| `statusText` | `string` | http status string |
+| `apiResponse` | `object` | Task result. Captchaai.io API response.  |
 
-✅success object example
+✅Success object example:
 
-```javascript
+```json
 {
   error: 0,
   statusText: '200 OK',
@@ -104,8 +124,8 @@ All methods returns response with a simple schema described below.
 }
 ```
 
-❌invalid task example
-```javascript
+❌Invalid task object example:
+```json
 {
   error: -1,
   statusText: '400 Bad Request',
@@ -117,73 +137,51 @@ All methods returns response with a simple schema described below.
 }
 ```
 
-# ⚙️Supported API methods
-Each method is a easy way to **launch and handle a request** to captchaai API so you have to pass some args which mostly are of type string or type object. Anycase, this is described in captchaai docs page.
-[**reffered docs.**](https://docs.captchaai.io/)
+- Each method it's an easy way to **launch and handle multiple requests** to captchaai API.
+- Some determinated captchas task have required arguments which mostly are of type string or type object. Anycase, this is described in captchaai.io official docs page.
+- [**reffered docs.**](https://docs.captchaai.io/)
 
 
+# ⚙️ Supported API methods
 | Method                               | Returns                                                                                                                                                               |
 |:-------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `await handler.runAnyTask(taskData)` | handle tasks for a determined taskData. In order to build this object, use [**!reffered docs**](https://docs.captchaai.io/) and check parameters by catpcha task type |
+| `await handler.runAnyTask(taskData)` | handle task results for a taskData schema passed. In order to build this object, use [**!reffered docs**](https://docs.captchaai.io/) and **check parameters by catpcha task type**. |
 
-* taskData examples are shown above.
-
-* proxy credentials must be passed as `proxyInfo` schema shown above too.
+* `taskData` schema it's shown above.
+* `proxyInfo` can be passed as `{ 'proxy' : 'proxystring...' }` or as `{ proxyType:''}`
 
 
 *balance*
 -
-
 | Method | Returns     |
 | :-------- | :------- | 
 | `await handler.balance()` | directly the float value or an error object |
 | `await handler.getBalance()` | succes or error object |
 
 
-
-
-
-*hcaptcha*
+*fast-bind methods*
 -
-***pass null instead of empty for any argument***
+| Method                                                                                                                                      |
+|:--------------------------------------------------------------------------------------------------------------------------------------------|
+| `await handler.hcaptcha(websiteURL, websiteKey,/ proxyInfo, userAgent, isInvisible, enterprisePayload)`                                     |
+| `await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent, isInvisible, enterprisePayload)`                                        |
+| `await handler.hcaptchaclassification(question, queries, coordinate)`                                                                       |
+| `await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, recaptchaDataSValue, cookies)`                        |
+| `await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent, isInvisible, recaptchaDataSValue, cookies)`                          |
+| `await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent, enterprisePayload, apiDomain, cookies)`                  |
+| `await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent, enterprisePayload, apiDomain, cookies)`                    |
+| `await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore)`                                                        |
+| `await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore)`                                                          |
+| `await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)`                                                                      |
+| `await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent, data)`                              |
+| `await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent, data)`                                |
+| `await handler.geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version, userAgent, geetestGetLib, initParameters)` |
+| `await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version, userAgent, geetestGetLib, initParameters)`   |
 
-| Method |
-| :-------- |
-| `await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, enterprisePayload=null)` |
-| `await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, enterprisePayload=null)` |
-| `await handler.hcaptchaclassification(question, queries, coordinate=true) // 🆕🔥 queries its a base64 images array` |
+*pass null instead of empty for optional arguments*
 
-*recaptcha*
--
-| Method |
-| :-------- |
-| `await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)` |
-| `await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)` |
-| `await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)` |
-| `await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)` |
-| `await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null)` |
-| `await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore=null)` |
-
-*datadome*
--
-| Method |
-| :-------- |
-| `await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)` |
-
-*funcaptcha*
--
-| Method |
-| :-------- |
-| `await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null)` |
-| `await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null)` |
-
-*geetest*
--
-| Method                                                                                                                                                          |
-|:----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `await handler.geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version=null, userAgent=null, geetestGetLib=null, initParameters=null)` |
-| `await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version=null, userAgent=null, geetestGetLib=null, initParameters=null)`   |
-
+🆕 `hcaptchaclassification(question, queries, coordinate)`:
+- see [HCaptchaClassification: recognize the images that you need to click](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click).
 
 **Currently unsupported API methods:**
 
@@ -194,10 +192,9 @@ Each method is a easy way to **launch and handle a request** to captchaai API so
 
 # Verbose level
 
-When singleton is initialized, verbose level must be passed as 2nd argument. Default is 0.
-
-    const apikey = 'CAI-XXX...';
-    const handler = new Captchaai(apikey, 1);
+```javascript
+const handler = new Captchaai(apikey, verbose); // on handler initialization
+```
 
 Verbose level `undefined || 0`: Dont print logs, just get response.
 
@@ -211,13 +208,14 @@ Verbose level `2`: Appends full captchaai api response in verbose level 1 output
 import Captchaai from 'captchaai-npm'; // import as ES6 module
 const apikey = 'CAI-XXX...';
 const captchaai = new Captchaai(apikey);
+
+// proxyType: (http, https, socks4, socks5)
 await captchaai.recaptchav3(
-    'https://websiteurl.com/', '0000000000000_0000000',
-    {	// proxyInfo
-        "proxyType": 'http', "proxyAddress": 'proxy.provider.io', "proxyPort": 32221, "proxyLogin": "******", "proxyPassword": "************"
-    }
-    ,'sign_in'	// required in recaptchav3
-).then(response => { console.log(response); })
+        'https://websiteurl.com/',
+        '0000000000000_0000000',
+        { 'proxyType': 'http', 'proxyAddress': 'ip_address', 'proxyPort': 3221, 'proxyLogin': 'username', 'proxyPassword': 'password' },
+        'sign_in'
+).then(response => { console.log(response); }) // actionMethod argument required in recaptchav3
 ```
 
 [*Building fast test-project with captchaai-npm](https://www.youtube.com/watch?v=s9OyE_pBPyE)
