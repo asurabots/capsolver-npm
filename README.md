@@ -163,7 +163,7 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 -
 | Method                                                                                                                                      |
 |:--------------------------------------------------------------------------------------------------------------------------------------------|
-| `await handler.hcaptcha(websiteURL, websiteKey,/ proxyInfo, userAgent, isInvisible, enterprisePayload)`                                     |
+| `await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, enterprisePayload)`                                     |
 | `await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent, isInvisible, enterprisePayload)`                                        |
 | `await handler.hcaptchaclassification(question, queries, coordinate)`                                                                       |
 | `await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, recaptchaDataSValue, cookies)`                        |
