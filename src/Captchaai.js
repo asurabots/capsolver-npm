@@ -1,6 +1,9 @@
 const Tasker = require("./Tasker");
 const axios = require("axios");
 
+/**
+ * Captchaai.io Task Handler
+ */
 class Captchaai {
     constructor(apikey, verboselvl=0, rqdelay=2500) { this.apikey = apikey; this.verbose = verboselvl; this.rqdelay = rqdelay; this.init(); }
 
@@ -9,29 +12,30 @@ class Captchaai {
         if(this.verbose === 2){ console.log('[' + this.constructor.name + '][Verbose level '+this.verbose+' running at: '+this.apikey+']'); }
     }
 
+    /**
+     * Handler results from determined captcha type
+     *
+     * @param {object} taskData - task details
+     */
     async runAnyTask(taskData) {
         if(taskData.hasOwnProperty('type')){
             let tasker = new Tasker(null, this.apikey, null, null, this.verbose);
-            if(tasker.validate(taskData)){
-                tasker.taskData = taskData;
-
-                if(taskData.hasOwnProperty('proxyInfo')){
-                    this.attachProxy(tasker, taskData.proxyInfo);
-                }
-
-                let tasked = await tasker.createTask();
-                if(tasked.error !== 0) return tasked;
-                return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
-            }else{
-                return;
-            }
-        }else{
-            throw TypeError('taskData has not type property.');
-        }
+            tasker.taskData = taskData;
+            if(taskData.hasOwnProperty('proxyInfo')){ this.attachProxy(tasker, taskData.proxyInfo); }
+            let tasked = await tasker.createTask();
+            if(tasked.error !== 0) return tasked;
+            return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        }else{ throw TypeError('taskData has not type property.'); }
     }
 
+    /**
+     * Returns USD balance as Float value
+     */
     async balance(){ let r = await this.getBalance(); return r.apiResponse.balance ? parseFloat(r.apiResponse.balance): null; }
 
+    /**
+     * Request for API key USD balance
+     */
     async getBalance(){
         let self = this;
         let axiosConfig = { method: 'post', url: 'https://api.captchaai.io/getBalance', headers: { }, data: { "clientKey": this.apikey } };
@@ -42,18 +46,26 @@ class Captchaai {
         return r;
     }
 
+    /**
+     * Appends specific proxy connection details to specific task
+     *
+     * @param {object} tasker - tasker instance
+     * @param {object} proxyInfo - proxy connection details schema
+     */
     attachProxy(tasker, proxyInfo){
-        if(proxyInfo.proxyType !== null || true){ tasker.taskData.proxyType = proxyInfo.proxyType; }
-        tasker.taskData.proxyAddress = proxyInfo.proxyAddress;
-        tasker.taskData.proxyPort = proxyInfo.proxyPort;
-        if(proxyInfo.proxyLogin !== null || true){ tasker.taskData.proxyLogin = proxyInfo.proxyLogin; }
-        if(proxyInfo.proxyPassword !== null || true){ tasker.taskData.proxyPassword = proxyInfo.proxyPassword; }
+        if(proxyInfo.hasOwnProperty('proxy')){ tasker.taskData.proxy = proxyInfo.proxy }else{
+            if(proxyInfo.proxyType !== null || true){ tasker.taskData.proxyType = proxyInfo.proxyType; }
+            tasker.taskData.proxyAddress = proxyInfo.proxyAddress;
+            tasker.taskData.proxyPort = proxyInfo.proxyPort;
+            if(proxyInfo.proxyLogin !== null || true){ tasker.taskData.proxyLogin = proxyInfo.proxyLogin; }
+            if(proxyInfo.proxyPassword !== null || true){ tasker.taskData.proxyPassword = proxyInfo.proxyPassword; }
+        }
         if(this.verbose === 1) { console.log('['+ this.constructor.name +'][proxyInfo]['+proxyInfo.proxyAddress+':'+proxyInfo.proxyPort+']'); }
         return tasker;
     }
 
-    // ## fast-bind commands ## //
-    // hcap
+    /** Fast-bind methods */
+    /** hcap */
     async hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, enterprisePayload=null){
         let tasker = new Tasker('HCaptchaTask', this.apikey, websiteURL, websiteKey, this.verbose);
         // binding
@@ -76,7 +88,15 @@ class Captchaai {
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
-    // recap
+    async hcaptchaclassification(question, base64, coordinate=true){
+        let tasker = new Tasker('HCaptchaClassification', this.apikey, null, null, this.verbose);
+        tasker.taskData.queries = base64;
+        tasker.taskData.question = question;
+        tasker.taskData.coordinate = coordinate;
+        return await tasker.createTask();
+    }
+
+    /** recap */
     async recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null){
         let tasker = new Tasker('RecaptchaV2Task', this.apikey, websiteURL, websiteKey, this.verbose);
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent }
@@ -142,7 +162,7 @@ class Captchaai {
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
-    // datadome
+    /** datadome */
     async datadome(websiteURL, userAgent, captchaUrl, proxyInfo){
         let tasker = new Tasker('DataDomeSliderTask', this.apikey, websiteURL, null, this.verbose);
         tasker.taskData.captchaUrl = captchaUrl;
@@ -153,7 +173,7 @@ class Captchaai {
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
-    // funcap
+    /** funcap */
     async funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null){
         let tasker = new Tasker('FunCaptchaTask', this.apikey, websiteURL, null, this.verbose);
         tasker.taskData.websitePublicKey = websitePublicKey;
@@ -177,7 +197,7 @@ class Captchaai {
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
-    // geetest
+    /** geetest */
     async geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version=null, userAgent=null, geetestGetLib=null, initParameters=null){
         let tasker = new Tasker('GeeTestTask', this.apikey, websiteURL, null, this.verbose);
         tasker.taskData.gt = gt;
@@ -210,14 +230,6 @@ class Captchaai {
     // unsupported methods:
     // ❌ ReCaptchaV2Classification
     // ✅ HCaptchaClassification (added on 1.2.1)
-
-    async hcaptchaclassification(question, base64, coordinate=true){
-        let tasker = new Tasker('HCaptchaClassification', this.apikey, null, null, this.verbose);
-        tasker.taskData.queries = base64;
-        tasker.taskData.question = question;
-        tasker.taskData.coordinate = coordinate;
-        return await tasker.createTask();
-    }
 
 }
 
