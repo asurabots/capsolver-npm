@@ -5,7 +5,7 @@ Want you to get captcha verified tokens with a simple function call in your Node
 Just install Axios and run with this repo. You will find a fast way to perform some automations.
 
 - **Manage to solve captcha challenges with AI. ([Captcha service](https://captchaai.io/) based)**
-- ❗❗ An API key is **required**.
+- ‼ An API key is **required**.
 - 🔥 *HCaptcha Image Classification it's now supported.*
 
 
