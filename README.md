@@ -58,7 +58,7 @@ const Captchaai = require('captchaai-npm');
 const handler = new Captchaai('apikey', 1); // verbose level 1
 let b = await handler.balance();
 if(b > 0){  // usd balance
-    await handler.hcaptchaproxyless(
+    await handler.hcaptcha(
         'https://websiteurl.com/', 
         '000000-000000000-0000000',
         { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" }   // 2nd proxyInfo format
