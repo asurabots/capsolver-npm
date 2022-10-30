@@ -2,9 +2,9 @@
 
 Want you to get captcha verified tokens with a simple function call in your NodeJS application?
 
-Just install Axios and run with this repo. You will find a fast way to perform some automations.
+Run with this repo and find a fast way to perform web/api automations.
 
-- **Manage to solve captcha challenges with AI. ([Captcha service](https://captchaai.io/) based)**
+- **Manage to solve captcha challenges with AI in a NodeJS app ([captcha service based](https://captchaai.io/)).**
 - ‼ An API key is **required**.
 - 🔥 *HCaptcha Image Classification it's now supported.*
 
@@ -36,7 +36,7 @@ Just install Axios and run with this repo. You will find a fast way to perform s
 
 **1️⃣ fast-bind methods**
 
-*example: balance check + `.hcaptchaproxyless()`*
+*example: check captchaai.io balance + run for one `.hcaptchaproxyless()`*
 
 ```javascript
 const Captchaai = require('captchaai-npm');
@@ -51,7 +51,7 @@ if(b > 0){  // usd balance
 }
 ```
 
-*example: handle for hcaptcha task with `.hcaptcha()` using custom proxy server.*
+*example: run HCaptchaTask with `.hcaptcha()` w/custom proxy server.*
 
 ```javascript
 const Captchaai = require('captchaai-npm');
@@ -70,10 +70,10 @@ if(b > 0){  // usd balance
 }
 ```
 
-**2️⃣ `.runAnyTask(taskData)`**
+**2️⃣ Run any task. Build `taskData` schema for a task type.**
 
 
-*example: build proxyless `taskData` schema performing HCaptchaTaskProxyless.*
+*example: build proxyless `taskData` schema for HCaptchaTaskProxyless.*
 ```javascript
 const Captchaai = require('captchaai-npm');
 const handler = new Captchaai('apikey');
@@ -97,7 +97,7 @@ const taskData =
 handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
-# ↩️ Returned object:
+# ↩️ Returned object
 
 **All methods return the following schema.**
 
@@ -107,11 +107,10 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 | `statusText` | `string` | http status string |
 | `apiResponse` | `object` | Task result. Captchaai.io API response.  |
 
-✅Success object example:
-
 ```javascript
-{
-  error: 0,
+// ✅ success object example
+{   
+  error: 0,  
   statusText: '200 OK',
   apiResponse: {
     errorId: 0,
@@ -124,9 +123,9 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 }
 ```
 
-❌Invalid task object example:
 ```javascript
-{
+// ❌ invalid task object example
+{   
   error: -1,
   statusText: '400 Bad Request',
   apiResponse: {
@@ -161,27 +160,33 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 
 *fast-bind methods*
 -
-| Method                                                                                                                                      |
-|:--------------------------------------------------------------------------------------------------------------------------------------------|
-| `await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, enterprisePayload)`                                     |
-| `await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent, isInvisible, enterprisePayload)`                                        |
-| `await handler.hcaptchaclassification(question, queries, coordinate)`                                                                       |
-| `await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, recaptchaDataSValue, cookies)`                        |
-| `await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent, isInvisible, recaptchaDataSValue, cookies)`                          |
-| `await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent, enterprisePayload, apiDomain, cookies)`                  |
-| `await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent, enterprisePayload, apiDomain, cookies)`                    |
-| `await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore)`                                                        |
-| `await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore)`                                                          |
-| `await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)`                                                                      |
-| `await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent, data)`                              |
-| `await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent, data)`                                |
-| `await handler.geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version, userAgent, geetestGetLib, initParameters)` |
-| `await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version, userAgent, geetestGetLib, initParameters)`   |
+
+
+```javascript
+await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, enterprisePayload)
+await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent, isInvisible, enterprisePayload)
+await handler.hcaptchaclassification(question, queries, coordinate)
+
+await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, recaptchaDataSValue, cookies)
+await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent, isInvisible, recaptchaDataSValue, cookies)
+await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent, enterprisePayload, apiDomain, cookies)
+await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent, enterprisePayload, apiDomain, cookies)
+await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore)
+await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore)
+
+await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)
+
+await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent, data)
+await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent, data)
+
+await handler.geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version, userAgent, geetestGetLib, initParameters)
+await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version, userAgent, geetestGetLib, initParameters)
+```
 
 *pass null instead of empty for optional arguments*
 
-🆕 `hcaptchaclassification(question, queries, coordinate)`:
-- see [HCaptchaClassification: recognize the images that you need to click](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click).
+🆕 [HCaptchaClassification: recognize the images that you need to click](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click):
+- Responds through image recognition. Send base64 images with `.hcaptchaclassification(question, queries, coordinate)`.
 
 **Currently unsupported API methods:**
 
