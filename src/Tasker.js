@@ -4,14 +4,14 @@ const axios = require('axios');
 
 class Tasker {
     constructor(type, apiKey, websiteURL, websiteKey=undefined, verbose) {
-        this.apiKey = apiKey;
+        this.apikey = apiKey;
         this.verbose = verbose;
         this.parameters = new Validation().parameters;
         this.taskData = { "type":type, "websiteURL": websiteURL , "websiteKey": websiteKey };
     }
 
     /**
-     * Send createTask request with specific data
+     * api.captchaai.io/createTask
      */
     async createTask() {
         let self = this;
@@ -20,7 +20,7 @@ class Tasker {
 
         let v = this.validate(this.taskData);
 
-        let axiosConfig = { url: 'https://api.captchaai.io/createTask', headers: { }, method: 'post', data: { "clientKey": this.apiKey.toString(), "task": this.taskData } };
+        let axiosConfig = { url: 'https://api.captchaai.io/createTask', headers: { }, method: 'post', data: { "clientKey": this.apikey.toString(), "task": this.taskData } };
         let r=await axios(axiosConfig)
             .then(async function (response) {
                 if(self.verbose === 2){ console.log(response.data); }
@@ -40,14 +40,14 @@ class Tasker {
     }
 
     /**
-     * Wait task to finish with results
-     * @param {string} taskId - new task id generated
-     * @param {number} rqDelay - retrieve results requesting delay in ms
+     * api.captchaai.io/getTaskResult - retrieve results loop
+     * @param {string} taskId - associated taskId
+     * @param {number} rqDelay - retrieve results delay in ms
      */
     async getTaskResult(taskId, rqDelay){
         let self = this; let status = ''; let fails = 0; let r = null;
         if(taskId === undefined) return;
-        let requestData = { "clientKey":this.apiKey, "taskId": taskId };
+        let requestData = { "clientKey":this.apikey, "taskId": taskId };
         let axiosConfig = { method: 'post', url: 'https://api.captchaai.io/getTaskResult', headers: { }, data: requestData };
         while(status !== 'ready'){
             await sleep(rqDelay);
@@ -77,8 +77,8 @@ class Tasker {
     }
 
     /**
-     * Validate requested task schema required parameters
-     * @param {object} taskData - task schema
+     * Validate captcha task required parameters
+     * @param {object} taskData - taskData schema
      */
     validate(taskData){
         if(Object.keys(this.parameters).includes(taskData.type)){ // ?is a existing captcha task
