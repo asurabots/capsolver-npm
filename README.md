@@ -1,16 +1,15 @@
-# captchaai.io api🧠 task handler
+# captchaai.io api wrapper🧠 (tasks handler)
 
-Want you to get captcha verified tokens with a simple function call in your NodeJS application?
+Want you to get captcha verified **tokens** calling one function within your NodeJS application?
 
 Run with this repo and find a fast way to perform web/api automations.
 
 - **Manage to solve captcha challenges with AI in a NodeJS app ([captcha service based](https://captchaai.io/)).**
 - ‼ An API key is **required**.
-- 🔥 *HCaptcha Image Classification it's now supported.*
-
+- 🔥 *HCaptcha & FunCaptcha Images Classification Tasks are now binded.*
 
 [![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
-[![](https://img.shields.io/badge/1.2.2-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
+[![](https://img.shields.io/badge/1.2.3-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
 [![](https://img.shields.io/badge/API_doc-captchaai.atlassian.net-blue)](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/393295/All+task+types+and+price+list)
 
 # ⬇️ Install
@@ -72,23 +71,13 @@ if(b > 0){  // usd balance
 
 **2️⃣ Run any task. Build `taskData` schema for a task type.**
 
-
-*example: build proxyless `taskData` schema for HCaptchaTaskProxyless.*
-```javascript
-const Captchaai = require('captchaai-npm');
-const handler = new Captchaai('apikey');
-const taskData = 
-    { type : 'HCaptchaTaskProxyless', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000' }
-await handler.runAnyTask(taskData).then(response => { console.log(response); });
-```
-
 *example: build custom proxy `taskData` schema for HCaptchaTask.*
 ```javascript
 const Captchaai = require('captchaai-npm');
 const handler = new Captchaai('apikey');
 const taskData =
     { 
-    type : 'HCaptchaTask',
+    type : 'HCaptchaTask',  // type is required, etc.
     websiteURL : 'https://website.com/', 
     websiteKey : '000000-00000-000000-000000000',
     // proxyInfo: { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" }, // also string format is supported with `proxy`
@@ -178,6 +167,7 @@ await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)
 
 await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent, data)
 await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent, data)
+await handler.funcaptchaclassification(image, question)
 
 await handler.geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version, userAgent, geetestGetLib, initParameters)
 await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version, userAgent, geetestGetLib, initParameters)
@@ -185,8 +175,14 @@ await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdom
 
 *pass null instead of empty for optional arguments*
 
-🆕 [HCaptchaClassification: recognize the images that you need to click](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click):
-- Responds through image recognition. Send base64 images with `.hcaptchaclassification(question, queries, coordinate)`.
+
+🆕 [**FunCaptchaClassification (beta) : recognize the images that you need to click**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click):
+- Send base64 **screenshot image** with `.funcaptchaclassification(image, question)`.
+
+🆕 [**HCaptchaClassification: recognize the images that you need to click**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click):
+- Responds through image recognition. 
+- Send base64 **images array** with `.hcaptchaclassification(question, queries, coordinate)`.
+
 
 **Currently unsupported API methods:**
 
@@ -209,18 +205,29 @@ Verbose level `2`: Appends full captchaai api response in verbose level 1 output
 
 # More code examples
 
+
+*example: build proxyless `taskData` schema for HCaptchaTaskProxyless.*
+```javascript
+const Captchaai = require('captchaai-npm');
+const handler = new Captchaai('apikey');
+const taskData = 
+    { type : 'HCaptchaTaskProxyless', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000' }
+await handler.runAnyTask(taskData).then(response => { console.log(response); });
+```
+
+*example: recaptchav3.*
 ```javascript
 import Captchaai from 'captchaai-npm'; // import as ES6 module
 const apikey = 'CAI-XXX...';
-const captchaai = new Captchaai(apikey);
+const handler = new Captchaai(apikey);
 
-// proxyType: (http, https, socks4, socks5)
-await captchaai.recaptchav3(
+// *proxyType parameter supports for: http, https, socks4, socks5
+await handler.recaptchav3(
         'https://websiteurl.com/',
         '0000000000000_0000000',
         { 'proxyType': 'http', 'proxyAddress': 'ip_address', 'proxyPort': 3221, 'proxyLogin': 'username', 'proxyPassword': 'password' },
-        'sign_in'
-).then(response => { console.log(response); }) // actionMethod argument required in recaptchav3
+        'sign_in' // pageAction argument required in recaptchav3
+).then(response => { console.log(response); }) 
 ```
 
 [*Building fast test-project with captchaai-npm](https://www.youtube.com/watch?v=s9OyE_pBPyE)
