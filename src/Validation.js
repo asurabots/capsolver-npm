@@ -94,6 +94,10 @@ class Validation {
                 { name:"proxyAddress", required: true, type: 'string' }, { name:"proxyPort", required: true, type: 'number' },
                 { name:"proxyLogin", required: false, type: 'string' }, { name:"proxyPassword", required: false, type: 'string' },
             ];
+        this.parameters.FunCaptchaClassification =
+            [
+                { name:"image", required: true, type: 'string' }, { name:"question", required: true, type: 'string' },
+            ];
         this.parameters.FunCaptchaTaskProxyless =
             [
                 { name:"websiteURL", required: false, type: 'string' }, { name:"websitePublicKey", required: true, type: 'string' },
