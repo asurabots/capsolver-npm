@@ -5,17 +5,20 @@ Want you to get captcha verified **tokens** calling one function within your Nod
 Run with this repo and find a fast way to perform web/api automations.
 
 - **Manage to solve captcha challenges with AI in a NodeJS app ([captcha service based](https://captchaai.io/)).**
-- ‼ An API key is **required**.
+- ❗ An API key it's **required**. [**Get here.**](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
 - 🔥 *HCaptcha & FunCaptcha Images Classification Tasks are now binded.*
+- 👀 **Puppeteer integration at**  [**puppeteer-extra-plugin-captchaai**](https://github.com/0qwertyy/puppeteer-extra-plugin-captchaai).
 
-[![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
 [![](https://img.shields.io/badge/1.2.3-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
+[![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
 [![](https://img.shields.io/badge/API_doc-captchaai.atlassian.net-blue)](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/393295/All+task+types+and+price+list)
 
-# ⬇️ Install
+⬇️ Install
+-
     npm i captchaai-npm
 
-# ✋ Usage
+✋ Usage
+-
 
 1. Import module.
 
@@ -86,8 +89,8 @@ const taskData =
 handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
-# ↩️ Returned object
-
+↩️ Returned object
+-
 **All methods return the following schema.**
 
 | Parameter | Type     | Description                |
@@ -95,6 +98,7 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 | `error` | `number` | [*-1*] Request/solving **error**. [*0*] **Success** solving. |
 | `statusText` | `string` | http status string |
 | `apiResponse` | `object` | Task result. Captchaai.io API response.  |
+
 
 ```javascript
 // ✅ success object example
@@ -130,26 +134,27 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 - [**reffered docs.**](https://docs.captchaai.io/)
 
 
-# ⚙️ Supported API methods
+# ⚙️Supported API methods
 | Method                               | Returns                                                                                                                                                               |
 |:-------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `await handler.runAnyTask(taskData)` | handle task results for a taskData schema passed. In order to build this object, use [**!reffered docs**](https://docs.captchaai.io/) and **check parameters by catpcha task type**. |
-
-* `taskData` schema it's shown above.
-* `proxyInfo` can be passed as `{ 'proxy' : 'proxystring...' }` or as `{ proxyType:''}`
-
-
-*balance*
--
-| Method | Returns     |
-| :-------- | :------- | 
 | `await handler.balance()` | directly the float value or an error object |
 | `await handler.getBalance()` | succes or error object |
+| `await handler.runAnyTask(taskData)` | handle task results for a `taskData` schema passed. In order to build this object, use [**!reffered docs**](https://docs.captchaai.io/) and **check parameters by catpcha task type**. |
 
+* `taskData` schema it's shown in examples.
+* `proxyInfo` schema has 2 versions:
 
-*fast-bind methods*
+`{ 'proxy' : 'proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword' }`
+
+or
+
+`{ 'proxyType': 'http', 'proxyAddress': 'ip_address', 'proxyPort': 3221, 'proxyLogin': 'username', 'proxyPassword': 'password' }`
+
+*(proxyLogin & proxyPassword are optionals)*
+
+*task-bind methods*
 -
-
+retrieve solutions (tokens/coordenates) with the followings:
 
 ```javascript
 await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, enterprisePayload)
@@ -175,14 +180,13 @@ await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdom
 
 *pass null instead of empty for optional arguments*
 
-
 🆕 [**FunCaptchaClassification (beta) : recognize the images that you need to click**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click):
 - Send base64 **screenshot image** with `.funcaptchaclassification(image, question)`.
 
 🆕 [**HCaptchaClassification: recognize the images that you need to click**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click):
 - Responds through image recognition. 
 - Send base64 **images array** with `.hcaptchaclassification(question, queries, coordinate)`.
-
+- 👀 Find [**here**](https://github.com/0qwertyy/puppeteer-extra-plugin-captchaai) an **integration within puppeteer**.
 
 **Currently unsupported API methods:**
 
@@ -203,8 +207,8 @@ Verbose level `1`: Print logs about performed requests during execution.
 
 Verbose level `2`: Appends full captchaai api response in verbose level 1 outputs.
 
-# More code examples
-
+More code examples
+-
 
 *example: build proxyless `taskData` schema for HCaptchaTaskProxyless.*
 ```javascript
