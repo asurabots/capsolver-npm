@@ -75,13 +75,22 @@ class Captchaai {
     }
 
     /** Fast-bind methods **/
+    /** img2txt **/
+    async image2text(body){
+        let tasker = new Tasker('ImageToTextTask', this.apikey, this.verbose);
+        // binding
+        tasker.taskData.body = body;
+        return await tasker.createTask();
+    }
+
     /** hcap **/
     async hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, enterprisePayload=null){
-        let tasker = new Tasker('HCaptchaTask', this.apikey, websiteURL, websiteKey, this.verbose);
-        // binding
-        if(userAgent!==null) { tasker.taskData.userAgent = userAgent }
-        if(isInvisible!==null) { tasker.taskData.isInvisible = true }
-        if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload }
+        let tasker = new Tasker('HCaptchaTask', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
+        if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
+        if(isInvisible!==null) { tasker.taskData.isInvisible = true; }
+        if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload; }
         this.attachProxy(tasker, proxyInfo);
         let tasked = await tasker.createTask();
         if(tasked.error !== 0) return tasked;
@@ -89,7 +98,9 @@ class Captchaai {
     }
 
     async hcaptchaproxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, enterprisePayload=null){
-        let tasker = new Tasker('HCaptchaTaskProxyless', this.apikey, websiteURL, websiteKey, this.verbose);
+        let tasker = new Tasker('HCaptchaTaskProxyless', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent }
         if(isInvisible!==null) { tasker.taskData.isInvisible = true }
         if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload }
@@ -99,7 +110,7 @@ class Captchaai {
     }
 
     async hcaptchaclassification(question, base64, coordinate=true){
-        let tasker = new Tasker('HCaptchaClassification', this.apikey, null, null, this.verbose);
+        let tasker = new Tasker('HCaptchaClassification', this.apikey, this.verbose);
         tasker.taskData.queries = base64;
         tasker.taskData.question = question;
         tasker.taskData.coordinate = coordinate;
@@ -108,7 +119,9 @@ class Captchaai {
 
     /** recap **/
     async recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null){
-        let tasker = new Tasker('RecaptchaV2Task', this.apikey, websiteURL, websiteKey, this.verbose);
+        let tasker = new Tasker('RecaptchaV2Task', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent }
         if(isInvisible!==null) { tasker.taskData.isInvisible = true }
         if(recaptchaDataSValue!==null) { tasker.taskData.recaptchaDataSValue = recaptchaDataSValue }
@@ -120,7 +133,9 @@ class Captchaai {
     }
 
     async recaptchav2proxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null){
-        let tasker = new Tasker('RecaptchaV2TaskProxyless', this.apikey, websiteURL, websiteKey, this.verbose);
+        let tasker = new Tasker('RecaptchaV2TaskProxyless', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent }
         if(isInvisible!==null) { tasker.taskData.isInvisible = true }
         if(recaptchaDataSValue!==null) { tasker.taskData.recaptchaDataSValue = recaptchaDataSValue }
@@ -131,7 +146,9 @@ class Captchaai {
     }
 
     async recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null){
-        let tasker = new Tasker('RecaptchaV2EnterpriseTask', this.apikey, websiteURL, websiteKey, this.verbose);
+        let tasker = new Tasker('RecaptchaV2EnterpriseTask', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
         if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload }
         if(apiDomain!==null) { tasker.taskData.apiDomain = apiDomain; }
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
@@ -143,7 +160,9 @@ class Captchaai {
     }
 
     async recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null){
-        let tasker = new Tasker('RecaptchaV2EnterpriseTaskProxyless', this.apikey, websiteURL, websiteKey, this.verbose);
+        let tasker = new Tasker('RecaptchaV2EnterpriseTaskProxyless', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
         if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload }
         if(apiDomain!==null) { tasker.taskData.apiDomain = apiDomain; }
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
@@ -154,7 +173,9 @@ class Captchaai {
     }
 
     async recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null){
-        let tasker = new Tasker('RecaptchaV3TaskProxyless', this.apikey, websiteURL, websiteKey, this.verbose);
+        let tasker = new Tasker('RecaptchaV3Task', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
         tasker.taskData.pageAction = pageAction;
         if(minScore!==null) { tasker.taskData.minScore = minScore; }
         this.attachProxy(tasker, proxyInfo);
@@ -164,7 +185,9 @@ class Captchaai {
     }
 
     async recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore=null){
-        let tasker = new Tasker('RecaptchaV3TaskProxyless', this.apikey, websiteURL, websiteKey, this.verbose);
+        let tasker = new Tasker('RecaptchaV3TaskProxyless', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
         tasker.taskData.pageAction = pageAction;
         if(minScore!==null) { tasker.taskData.minScore = minScore; }
         let tasked = await tasker.createTask();
@@ -174,7 +197,8 @@ class Captchaai {
 
     /** datadome **/
     async datadome(websiteURL, userAgent, captchaUrl, proxyInfo){
-        let tasker = new Tasker('DataDomeSliderTask', this.apikey, websiteURL, null, this.verbose);
+        let tasker = new Tasker('DataDomeSliderTask', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
         tasker.taskData.captchaUrl = captchaUrl;
         tasker.taskData.userAgent = userAgent;
         this.attachProxy(tasker, proxyInfo);
@@ -185,7 +209,8 @@ class Captchaai {
 
     /** funcap **/
     async funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null){
-        let tasker = new Tasker('FunCaptchaTask', this.apikey, websiteURL, null, this.verbose);
+        let tasker = new Tasker('FunCaptchaTask', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
         tasker.taskData.websitePublicKey = websitePublicKey;
         tasker.taskData.funcaptchaApiJSSubdomain = funcaptchaApiJSSubdomain;
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
@@ -197,7 +222,8 @@ class Captchaai {
     }
 
     async funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null){
-        let tasker = new Tasker('FunCaptchaTaskProxyless', this.apikey, websiteURL, null, this.verbose);
+        let tasker = new Tasker('FunCaptchaTaskProxyless', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
         tasker.taskData.websitePublicKey = websitePublicKey;
         tasker.taskData.funcaptchaApiJSSubdomain = funcaptchaApiJSSubdomain;
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
@@ -208,7 +234,7 @@ class Captchaai {
     }
 
     async funcaptchaclassification(base64, question){
-        let tasker = new Tasker('FunCaptchaClassification', this.apikey, null, null, this.verbose);
+        let tasker = new Tasker('FunCaptchaClassification', this.apikey, this.verbose);
         tasker.taskData.image = base64;
         tasker.taskData.question = question;
         return await tasker.createTask();
@@ -216,7 +242,8 @@ class Captchaai {
 
     /** geetest **/
     async geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version=null, userAgent=null, geetestGetLib=null, initParameters=null){
-        let tasker = new Tasker('GeeTestTask', this.apikey, websiteURL, null, this.verbose);
+        let tasker = new Tasker('GeeTestTask', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
         tasker.taskData.gt = gt;
         tasker.taskData.challenge = challenge;
         tasker.taskData.geetestApiServerSubdomain = geetestApiServerSubdomain;
@@ -231,7 +258,8 @@ class Captchaai {
     }
 
     async geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version=null, userAgent=null, geetestGetLib=null, initParameters=null){
-        let tasker = new Tasker('GeeTestTaskProxyless', this.apikey, websiteURL, null, this.verbose);
+        let tasker = new Tasker('GeeTestTaskProxyless', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
         tasker.taskData.gt = gt;
         tasker.taskData.challenge = challenge;
         tasker.taskData.geetestApiServerSubdomain = geetestApiServerSubdomain;
@@ -244,9 +272,35 @@ class Captchaai {
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
 
+    /** antikadasa **/
+    async antikasada(pageURL, proxyInfo, onlyCD=null, userAgent=null){
+        let tasker = new Tasker('GeeTestTaskProxyless', this.apikey, this.verbose);
+        tasker.taskData.pageURL = pageURL;
+        if(onlyCD!==null) { tasker.taskData.onlyCD = onlyCD; }
+        if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
+        this.attachProxy(tasker, proxyInfo);
+        let tasked = await tasker.createTask();
+        if(tasked.error !== 0) return tasked;
+        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+    }
+
+    /** antiakamaibmp **/
+    async antiakamaibmp(packageName, version=null, deviceId=null, deviceName=null, count=null){
+        let tasker = new Tasker('AntiAkamaiBMPTask', this.apikey, this.verbose);
+        tasker.taskData.packageName = packageName;
+        if(version!==null) { tasker.taskData.version = version; }
+        if(deviceId!==null) { tasker.taskData.version = deviceId; }
+        if(deviceName!==null) { tasker.taskData.version = deviceName; }
+        if(count!==null) { tasker.taskData.userAgent = count; }
+        return await tasker.createTask();
+    }
+
     // unsupported methods:
     // ❌ ReCaptchaV2Classification
     // ✅ HCaptchaClassification (added on 1.2.1)
+    // ✅ FunCaptchaClassification (added on 1.2.4)
+    // ✅ AntiKasadaTask (added on 1.2.4)
+    // ✅ AntiAkamaiBMPTask (added on 1.2.4)
 
 }
 
