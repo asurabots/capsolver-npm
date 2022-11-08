@@ -7,7 +7,7 @@ class Tasker {
         this.apikey = apiKey;
         this.verbose = verbose;
         this.parameters = new Validation().parameters;
-        this.taskData = { 'type' : type, 'appId' : 'AF0F28E5-8245-49FD-A3FD-43D576C0E9B3' };
+        this.taskData = { 'type' : type };
     }
 
     /**
@@ -15,26 +15,21 @@ class Tasker {
      */
     async createTask(url=undefined) {
         let self = this;
-
         this.validate(this.taskData);
-
-        let axiosConfig = { url: (url === undefined) ? 'https://api.captchaai.io/createTask' : url, headers: { }, method: 'post', data: { 'clientKey': this.apikey.toString(), 'task': this.taskData } };
-        let r=await axios(axiosConfig)
+        let axiosConfig = { url: (url === undefined) ? 'https://api.captchaai.io/createTask' : url, headers: { }, method: 'post', data: { 'clientKey': this.apikey.toString(), 'appId': 'AF0F28E5-8245-49FD-A3FD-43D576C0E9B3', 'task': this.taskData } };
+        let handled = await axios(axiosConfig)
             .then(async function (response) {
                 if(self.verbose === 2){ console.log(response.data); }
-                if(response.data.errorId !== 0){    // TASK/SOLVING ERROR
-                    return { 'error':-1, 'statusText':response.status, 'apiResponse':response.data }
-                }
-                return { 'error':0, 'statusText':response.status, 'apiResponse':response.data } // SUCCESS SOLVING
+                if(response.data.errorId !== 0){ return { 'error':-1, 'statusText':response.status, 'apiResponse':response.data } }
+                return { 'error':0, 'statusText':response.status, 'apiResponse':response.data }
             })
             .catch(function (error) {
-                if(error.response === undefined){ return { 'error':-1, 'statusText':JSON.stringify(error), 'apiResponse':'' } }
+                if(error.response === undefined){ return error; }
                 if(self.verbose === 2){ console.log(error.response.data); }
                 return { 'error':-1, 'statusText':error.response.status, 'apiResponse':error.response.data }
             });
-
-        if(this.verbose === 1 || this.verbose === 2){ console.log('[' + this.taskData.type + ']['+r.statusText+'][' + axiosConfig.url + ']'); }
-        return r;
+        if(this.verbose !== 0){ console.log('[' + this.taskData.type + ']['+r.statusText+'][' + axiosConfig.url + ']'); }
+        return handled;
     }
 
     /**
@@ -43,35 +38,34 @@ class Tasker {
      * @param {number} rqDelay - retrieve results delay in ms
      */
     async getTaskResult(taskId, rqDelay){
-        let self = this; let status = ''; let fails = 0; let r = null;
+        let self = this; let status = ''; let fails = 0; let handled = null;
         if(taskId === undefined) return;
         let requestData = { 'clientKey':this.apikey, 'taskId': taskId };
         let axiosConfig = { method: 'post', url: 'https://api.captchaai.io/getTaskResult', headers: { }, data: requestData };
         while(status !== 'ready'){
             await sleep(rqDelay);
             if(fails > 10) break;
-            r = await axios(axiosConfig)
+            handled = await axios(axiosConfig)
                 .then(async function (response) {
                     if(self.verbose === 2){ console.log(requestData); }
-                    if(response.data.errorId !== 0){    // CAPTCHA NOT VALID/SOLVED
+                    if(response.data.errorId !== 0){
                         status = response.data.errorDescription;
-                        return { 'error':-1, 'statusText':response.status+' '+response.statusText, 'apiResponse':response.data }
+                        return { 'error':-1, 'statusText':response.status, 'apiResponse':response.data }
                     }
-                    status = response.data.status;      // CAPTCHA PASSED
-                    return { 'error':0, 'statusText':response.status+' '+response.statusText, 'apiResponse':response.data }
+                    status = response.data.status;
+                    return { 'error':0, 'statusText':response.status, 'apiResponse':response.data }
                 })
-                .catch(function (error) {               // REQUEST ERROR
+                .catch(function (error) {
                     if(self.verbose === 2){ console.log(error.response.data); }
                     fails++;
-                    return { 'error':-1, 'statusText':error.response.status+' '+error.response.statusText, 'apiResponse':error.response.data
-                    }
+                    return { 'error':-1, 'statusText':error.response.status, 'apiResponse':error.response.data }
                 });
-            if(this.verbose === 1 || this.verbose === 2)
-                console.log('[' + this.taskData.type + ']['+r.statusText+']['+axiosConfig.url+'][for: ' + (this.taskData.websiteURL ? this.taskData.websiteURL : this.taskData.captchaUrl) + '][taskId: '+taskId+'][status: '+status+']');
+            if(this.verbose !== 0)
+                console.log('[' + this.taskData.type + ']['+r.statusText+'][api.captchaai.io/getTaskResult][for: ' + (this.taskData.websiteURL ? this.taskData.websiteURL : this.taskData.captchaUrl) + '][taskId: '+taskId+'][status: '+status+']');
             if(this.verbose === 2){ console.log(r.apiResponse)}
             if(r.error !== 0) break;
         }
-        return r;
+        return handled;
     }
 
     /**
