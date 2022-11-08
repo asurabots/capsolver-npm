@@ -279,7 +279,7 @@ class Captchaai {
         if(onlyCD!==null) { tasker.taskData.onlyCD = onlyCD; }
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask();
+        let tasked = await tasker.createTask('https://api.captchaai.io/kasada/invoke');
         if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
@@ -292,7 +292,7 @@ class Captchaai {
         if(deviceId!==null) { tasker.taskData.version = deviceId; }
         if(deviceName!==null) { tasker.taskData.version = deviceName; }
         if(count!==null) { tasker.taskData.userAgent = count; }
-        return await tasker.createTask();
+        return await tasker.createTask('https://api.captchaai.io/akamaibmp/invoke');
     }
 
     // unsupported methods:
