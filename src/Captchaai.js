@@ -274,7 +274,8 @@ class Captchaai {
 
     /** antikadasa **/
     async antikasada(pageURL, proxyInfo, onlyCD=null, userAgent=null){
-        let tasker = new Tasker('GeeTestTaskProxyless', this.apikey, this.verbose);
+        let tasker = new Tasker('notacaptcha', this.apikey, this.verbose);
+        delete tasker.taskData.type;
         tasker.taskData.pageURL = pageURL;
         if(onlyCD!==null) { tasker.taskData.onlyCD = onlyCD; }
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
@@ -286,7 +287,8 @@ class Captchaai {
 
     /** antiakamaibmp **/
     async antiakamaibmp(packageName, version=null, deviceId=null, deviceName=null, count=null){
-        let tasker = new Tasker('AntiAkamaiBMPTask', this.apikey, this.verbose);
+        let tasker = new Tasker('notacaptcha', this.apikey, this.verbose);
+        delete tasker.taskData.type;
         tasker.taskData.packageName = packageName;
         if(version!==null) { tasker.taskData.version = version; }
         if(deviceId!==null) { tasker.taskData.version = deviceId; }
