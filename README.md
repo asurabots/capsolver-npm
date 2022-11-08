@@ -6,10 +6,12 @@ Run with this repo and find a fast way to perform web/api automations.
 
 - **Manage to solve captcha challenges with AI in a NodeJS app ([captcha service based](https://captchaai.io/)).**
 - ❗ An API key it's **required**. [**Get here.**](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
-- 🔥 *HCaptcha & FunCaptcha Images Classification Tasks are now binded.*
 - 👀 **Puppeteer integration at**  [**puppeteer-extra-plugin-captchaai**](https://github.com/0qwertyy/puppeteer-extra-plugin-captchaai).
 
-[![](https://img.shields.io/badge/1.2.3-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
+
+now binded: 🔥 *AntiKasada & AntiAkamaiBMP. 🔥 HCaptcha & FunCaptcha Images Classification.*
+
+[![](https://img.shields.io/badge/1.2.4-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
 [![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
 [![](https://img.shields.io/badge/API_doc-captchaai.atlassian.net-blue)](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/393295/All+task+types+and+price+list)
 
@@ -93,11 +95,11 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 -
 **All methods return the following schema.**
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `error` | `number` | [*-1*] Request/solving **error**. [*0*] **Success** solving. |
-| `statusText` | `string` | http status string |
-| `apiResponse` | `object` | Task result. Captchaai.io API response.  |
+| Parameter | Type     | Description                                                  |
+| :-------- | :------- |:-------------------------------------------------------------|
+| `error` | `number` | [*-1*] request/solving **error**. [*0*] **success** solving. |
+| `statusText` | `string` | http status string                                           |
+| `apiResponse` | `object` | **results/solution** (captchaai.io API response).            |
 
 
 ```javascript
@@ -157,6 +159,12 @@ or
 retrieve solutions (tokens/coordenates) with the followings:
 
 ```javascript
+// check type of arguments and if it's required in API doc
+await handler.image2text(body) // example: body it's a base64 string
+
+await handler.antikasada(pageURL, proxyInfo, onlyCD, userAgent) // *: pageUrl & proxyInfo are always required
+await handler.antiakamaibmp(packageName, version, deviceId, deviceName, count) // *: packageName it's always required
+
 await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, enterprisePayload)
 await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent, isInvisible, enterprisePayload)
 await handler.hcaptchaclassification(question, queries, coordinate)
@@ -177,25 +185,30 @@ await handler.funcaptchaclassification(image, question)
 await handler.geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version, userAgent, geetestGetLib, initParameters)
 await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version, userAgent, geetestGetLib, initParameters)
 ```
-
 *pass null instead of empty for optional arguments*
 
-🆕 [**FunCaptchaClassification (beta) : recognize the images that you need to click**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click):
-- Send base64 **screenshot image** with `.funcaptchaclassification(image, question)`.
-
-🆕 [**HCaptchaClassification: recognize the images that you need to click**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click):
-- Responds through image recognition. 
-- Send base64 **images array** with `.hcaptchaclassification(question, queries, coordinate)`.
-- 👀 Find [**here**](https://github.com/0qwertyy/puppeteer-extra-plugin-captchaai) an **integration within puppeteer**.
-
 **Currently unsupported API methods:**
-
 ❌ ReCaptchaV2Classification
-❌ ImageToTextTask
-❌ AntiKasadaTask
-❌ AntiAkamaiBMPTask
 
-# Verbose level
+🆕 News
+-
+
+- [**HCaptchaClassification: Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
+  - Responds through image recognition.
+  - Send a base64 **images array** with `.hcaptchaclassification(question, queries, coordinate)`.
+  - 👀 Find [**here**](https://github.com/0qwertyy/puppeteer-extra-plugin-captchaai) an **integration within `puppeteer-extra`**.
+
+- [**FunCaptchaClassification (beta): Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
+  - Send a base64 **screenshot image** with `.funcaptchaclassification(image, question)`.
+
+- [**AntiKasadaTask: Solving Kasada.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426407/AntiKasadaTask+solving+Kasada)
+  - This task type AntiKasadaTask require that you send us your proxies.
+
+- [**AntiAkamaiBMPTask: Solving Akamai Mobile.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426407/AntiKasadaTask+solving+Kasada)
+  - This task type AntiKasadaTask require that you send us your proxies.
+
+Verbose level
+-
 
 ```javascript
 const handler = new Captchaai(apikey, verbose); // on handler initialization
