@@ -12,4 +12,28 @@
 
 References
 -
+
+more tasks examples:
+```javascript
+const Captchaai = require('captchaai-npm');
+const handler = new Captchaai('apikey');
+const taskData =
+    { type : 'HCaptchaTaskProxyless', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000' }
+await handler.runAnyTask(taskData).then(response => { console.log(response); });
+```
+
+```javascript
+import Captchaai from 'captchaai-npm'; // import as ES6 module
+const apikey = 'CAI-XXX...';
+const handler = new Captchaai(apikey);
+
+// *proxyType parameter supports for: http, https, socks4, socks5
+await handler.recaptchav3(
+        'https://websiteurl.com/',
+        '0000000000000_0000000',
+        { 'proxyType': 'http', 'proxyAddress': 'ip_address', 'proxyPort': 3221, 'proxyLogin': 'username', 'proxyPassword': 'password' },
+        'sign_in' // pageAction argument required in recaptchav3
+).then(response => { console.log(response); }) 
+```
+
 [*Building fast test-project with captchaai-npm](https://www.youtube.com/watch?v=s9OyE_pBPyE)
