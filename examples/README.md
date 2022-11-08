@@ -4,7 +4,7 @@ PM2
 - **Perform test/benchmark for a website with multiple PM2 process.**
 
 1. Install pm2 globally:  `npm install -g pm2`.
-3. Set [config file](https://www.google.com) as your preference.
+3. Set [config file](https://github.com/0qwertyy/captchaai-npm/blob/master/examples/ecosystem.config.js) as your preference.
 4. Control processes: `pm2 start ecosystem.config.js` & `pm2 delete all`.
 5. Print logs for all process: `pm2 logs`.
 
