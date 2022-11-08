@@ -1,6 +1,6 @@
 # captchaai.io api wrapper🧠 (tasks handler)
 
-Want you to get captcha verified **tokens** calling one function within your NodeJS application?
+Want you to get verified captcha **tokens** calling one function within your NodeJS application?
 
 Run with this repo and find a fast way to perform web/api automations.
 
@@ -11,7 +11,7 @@ Run with this repo and find a fast way to perform web/api automations.
 
 now binded: 🔥 *AntiKasada & AntiAkamaiBMP. 🔥 HCaptcha & FunCaptcha Images Classification.*
 
-[![](https://img.shields.io/badge/1.2.4-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
+[![](https://img.shields.io/badge/1.2.5-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
 [![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
 [![](https://img.shields.io/badge/API_doc-captchaai.atlassian.net-blue)](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/393295/All+task+types+and+price+list)
 
@@ -38,7 +38,7 @@ now binded: 🔥 *AntiKasada & AntiAkamaiBMP. 🔥 HCaptcha & FunCaptcha Images 
 
 **❗ There are 2 different versions in order to handle task results:**
 
-**1️⃣ fast-bind methods**
+**1️⃣ task-bind methods**
 
 *example: check captchaai.io balance + run for one `.hcaptchaproxyless()`*
 
@@ -48,14 +48,14 @@ const handler = new Captchaai('apikey', 1); // verbose level 1
 let b = await handler.balance();
 if(b > 0){  // usd balance
     await handler.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
-        .then(async r => {
-            if(r.error === 0)
-                console.log('got token!\n' + JSON.stringify(r.apiResponse));
+        .then(async response => {
+            if(response.error === 0){ console.log(response.solution) }
+            else{ console.log('error ' + JSON.stringify(response.apiResponse)) }
         });
 }
 ```
 
-*example: run HCaptchaTask with `.hcaptcha()` w/custom proxy server.*
+*example: run for one HCaptchaTask with `.hcaptcha()` with custom proxy.*
 
 ```javascript
 const Captchaai = require('captchaai-npm');
@@ -67,43 +67,50 @@ if(b > 0){  // usd balance
         '000000-000000000-0000000',
         { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" }   // 2nd proxyInfo format
     )
-     .then(async r => {
-         if(r.error === 0)
-             console.log('got token!\n' + JSON.stringify(r.apiResponse));
-     });
+    .then(async response => {
+        if(response.error === 0){ console.log(response.solution) }
+        else{ console.log('error ' + JSON.stringify(response.apiResponse)) }
+    });
 }
 ```
 
 **2️⃣ Run any task. Build `taskData` schema for a task type.**
 
-*example: build custom proxy `taskData` schema for HCaptchaTask.*
+*example: build & run `taskData` schema with custom proxy for HCaptchaTask.*
 ```javascript
 const Captchaai = require('captchaai-npm');
 const handler = new Captchaai('apikey');
-const taskData =
+const taskData =    // build a task
     { 
-    type : 'HCaptchaTask',  // type is required, etc.
+    type : 'HCaptchaTask',
     websiteURL : 'https://website.com/', 
     websiteKey : '000000-00000-000000-000000000',
-    // proxyInfo: { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" }, // also string format is supported with `proxy`
+    // also string format is supported with `proxy`
+    // proxyInfo: { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" },
     proxyInfo: { 'proxyType': 'http', 'proxyAddress': 'ip_address', 'proxyPort': 3221, 'proxyLogin': 'username', 'proxyPassword': 'password' },
     }
-handler.runAnyTask(taskData).then(response => { console.log(response); });
+    
+handler.runAnyTask(taskData)
+    .then(async response => {
+        if(response.error === 0){ console.log(response.solution) }
+        else{ console.log('error ' + JSON.stringify(response.apiResponse)) }
+    });
 ```
 
 ↩️ Returned object
 -
 **All methods return the following schema.**
 
-| Parameter | Type     | Description                                                  |
-| :-------- | :------- |:-------------------------------------------------------------|
-| `error` | `number` | [*-1*] request/solving **error**. [*0*] **success** solving. |
-| `statusText` | `string` | http status string                                           |
-| `apiResponse` | `object` | **results/solution** (captchaai.io API response).            |
+| Parameter     | Type     | Description                                                |
+|:--------------| :------- |:-----------------------------------------------------------|
+| `error`       | `number` | [*-1*] Request/Solving **error**. [*0*] **Success** solve. |
+| `statusText`  | `string` | HTTP status string.                                        |
+| `apiResponse` | `object` | **Results/solution** (captchaai.io API response).          |
+| `solution`    | `object` | **Solution got from success solve**.                       |
 
 
 ```javascript
-// ✅ success object example
+// ✅ success response
 {   
   error: 0,  
   statusText: '200 OK',
@@ -119,7 +126,7 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
 ```javascript
-// ❌ invalid task object example
+// ❌ ERROR_INVALID_TASK_DATA response
 {   
   error: -1,
   statusText: '400 Bad Request',
@@ -132,7 +139,7 @@ handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
 - Each method it's an easy way to **launch and handle multiple requests** to captchaai API.
-- Some determinated captchas task have required arguments which mostly are of type string or type object. Anycase, this is described in captchaai.io official docs page.
+- Some determinated captcha tasks have required arguments which mostly are of type string or type object. Anycase, this is described in captchaai.io official docs page.
 - [**reffered docs.**](https://docs.captchaai.io/)
 
 
@@ -159,12 +166,7 @@ or
 retrieve solutions (tokens/coordenates) with the followings:
 
 ```javascript
-// check type of arguments and if it's required in API doc
-await handler.image2text(body) // example: body it's a base64 string
-
-await handler.antikasada(pageURL, proxyInfo, onlyCD, userAgent) // *: pageUrl & proxyInfo are always required
-await handler.antiakamaibmp(packageName, version, deviceId, deviceName, count) // *: packageName it's always required
-
+// * check required parameters for a website with API docs.
 await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, enterprisePayload)
 await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent, isInvisible, enterprisePayload)
 await handler.hcaptchaclassification(question, queries, coordinate)
@@ -184,28 +186,16 @@ await handler.funcaptchaclassification(image, question)
 
 await handler.geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version, userAgent, geetestGetLib, initParameters)
 await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version, userAgent, geetestGetLib, initParameters)
+
+await handler.image2text(body)
+
+await handler.antikasada(pageURL, proxyInfo, onlyCD, userAgent) // *: pageUrl & proxyInfo are always required
+await handler.antiakamaibmp(packageName, version, deviceId, deviceName, count) // *: packageName it's always required
 ```
 *pass null instead of empty for optional arguments*
 
 **Currently unsupported API methods:**
 ❌ ReCaptchaV2Classification
-
-🆕 News
--
-
-- [**HCaptchaClassification: Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
-  - Responds through image recognition.
-  - Send a base64 **images array** with `.hcaptchaclassification(question, queries, coordinate)`.
-  - 👀 Find [**here**](https://github.com/0qwertyy/puppeteer-extra-plugin-captchaai) an **integration within `puppeteer-extra`**.
-
-- [**FunCaptchaClassification (beta): Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
-  - Send a base64 **screenshot image** with `.funcaptchaclassification(image, question)`.
-
-- [**AntiKasadaTask: Solving Kasada.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426407/AntiKasadaTask+solving+Kasada)
-  - This task type AntiKasadaTask require that you send us your proxies.
-
-- [**AntiAkamaiBMPTask: Solving Akamai Mobile.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426407/AntiKasadaTask+solving+Kasada)
-  - This task type AntiKasadaTask require that you send us your proxies.
 
 Verbose level
 -
@@ -220,31 +210,19 @@ Verbose level `1`: Print logs about performed requests during execution.
 
 Verbose level `2`: Appends full captchaai api response in verbose level 1 outputs.
 
-More code examples
+References
 -
 
-*example: build proxyless `taskData` schema for HCaptchaTaskProxyless.*
-```javascript
-const Captchaai = require('captchaai-npm');
-const handler = new Captchaai('apikey');
-const taskData = 
-    { type : 'HCaptchaTaskProxyless', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000' }
-await handler.runAnyTask(taskData).then(response => { console.log(response); });
-```
+- [**HCaptchaClassification: Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
+    - Responds through image recognition.
+    - Send a base64 **images array** with `.hcaptchaclassification(question, queries, coordinate)`.
+    - 👀 Find [**here**](https://github.com/0qwertyy/puppeteer-extra-plugin-captchaai) an **integration within `puppeteer-extra`**.
 
-*example: recaptchav3.*
-```javascript
-import Captchaai from 'captchaai-npm'; // import as ES6 module
-const apikey = 'CAI-XXX...';
-const handler = new Captchaai(apikey);
+- [**FunCaptchaClassification (beta): Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
+    - Send a base64 **screenshot image** with `.funcaptchaclassification(image, question)`.
 
-// *proxyType parameter supports for: http, https, socks4, socks5
-await handler.recaptchav3(
-        'https://websiteurl.com/',
-        '0000000000000_0000000',
-        { 'proxyType': 'http', 'proxyAddress': 'ip_address', 'proxyPort': 3221, 'proxyLogin': 'username', 'proxyPassword': 'password' },
-        'sign_in' // pageAction argument required in recaptchav3
-).then(response => { console.log(response); }) 
-```
+- [**AntiKasadaTask: Solving Kasada.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426407/AntiKasadaTask+solving+Kasada)
+    - This task type AntiKasadaTask require that you send us your proxies.
 
-[*Building fast test-project with captchaai-npm](https://www.youtube.com/watch?v=s9OyE_pBPyE)
+- [**AntiAkamaiBMPTask: Solving Akamai Mobile.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426407/AntiKasadaTask+solving+Kasada)
+    - This task type AntiKasadaTask require that you send us your proxies.
