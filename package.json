@@ -1,6 +1,6 @@
 {
   "name": "captchaai-npm",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "",
   "main": "src/Captchaai.js",
   "scripts": {
@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/0qwertyy/captchaai-npm",
   "dependencies": {
-    "axios": "^0.27.2",
-    "console-stamp": "^3.0.6"
+    "axios": "^0.27.2"
   }
 }
