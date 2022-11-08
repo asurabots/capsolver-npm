@@ -9,12 +9,11 @@ class Captchaai {
 
     /** * Set-up handler **/
     init(){
-        if(this.verbose !== 0 ) { require('console-stamp')(console, 'HH:MM:ss.l'); }
         if(this.verbose === 2){ console.log('[' + this.constructor.name + '][Verbose level '+this.verbose+' running at: '+this.apikey+']'); }
     }
 
     /** * Return USD balance as float number **/
-    async balance(){ let r = await this.getBalance(); return  r.apiResponse.balance ? parseFloat(r.apiResponse.balance): null; }
+    async balance(){ let handled = await this.getBalance(); return  handled.apiResponse.balance ? parseFloat(handled.apiResponse.balance): handled; }
 
     /**
      * One request to api.captchaai.io/getBalance
@@ -24,19 +23,15 @@ class Captchaai {
         let response = await axios({ method: 'post', url: 'https://api.captchaai.io/getBalance', headers: { }, data: { "clientKey": this.apikey } })
             .then(function (response) {
                 if(self.verbose === 2){ console.log(response.data); }
-                if(response.data.errorId !== 0){
-                    return { 'error':-1, 'statusText':response.status+' '+response.statusText, 'apiResponse':response.data }
-                }
-                return { 'error':0, 'statusText':response.status+' '+response.statusText, 'apiResponse':response.data }
+                if(response.data.errorId !== 0){ return { 'error':-1, 'statusText':response.status, 'apiResponse':response.data } }
+                return { 'error':0, 'statusText':response.status, 'apiResponse':response.data, 'solution':response.data.solution }
             })
             .catch(function (error) {
-                if(error.response === undefined){ return { 'error':-1, 'statusText':JSON.stringify(error), 'apiResponse':'' } }
+                if(error.response === undefined){ return error; }
                 if(self.verbose === 2){ console.log(error); }
-                return { 'error':-1, 'statusText':error.response.status+' '+error.response.statusText, 'apiResponse':error.response.data }
+                return { 'error':-1, 'statusText':error.response.status, 'apiResponse':error.response.data }
             });
-        if(this.verbose !== 0) {
-            console.log('[getBalance]['+response.statusText+']['+parseFloat(response.apiResponse.balance)+' USD]');
-        }
+        if(this.verbose !== 0) { console.log('[' + this.constructor.name + '][getBalance][[' + response.statusText + '][' + parseFloat(response.apiResponse.balance) + ' USD]]'); }
         return response;
     }
 
@@ -274,7 +269,7 @@ class Captchaai {
 
     /** antikadasa **/
     async antikasada(pageURL, proxyInfo, onlyCD=null, userAgent=null){
-        let tasker = new Tasker('notacaptcha', this.apikey, this.verbose);
+        let tasker = new Tasker('isnotcaptcha', this.apikey, this.verbose);
         delete tasker.taskData.type;
         tasker.taskData.pageURL = pageURL;
         if(onlyCD!==null) { tasker.taskData.onlyCD = onlyCD; }
@@ -287,7 +282,7 @@ class Captchaai {
 
     /** antiakamaibmp **/
     async antiakamaibmp(packageName, version=null, deviceId=null, deviceName=null, count=null){
-        let tasker = new Tasker('notacaptcha', this.apikey, this.verbose);
+        let tasker = new Tasker('isnotcaptcha', this.apikey, this.verbose);
         delete tasker.taskData.type;
         tasker.taskData.packageName = packageName;
         if(version!==null) { tasker.taskData.version = version; }
