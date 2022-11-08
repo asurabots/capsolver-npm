@@ -1,4 +1,4 @@
-📁 Examples
+PM2
 -
 
 - **Perform test/benchmark for a website with multiple PM2 process.**
@@ -8,12 +8,13 @@
 4. Control processes: `pm2 start ecosystem.config.js` & `pm2 delete all`.
 5. Print logs for all process: `pm2 logs`.
 
-![](https://s1.gifyu.com/images/webstorm64_rDATvCkhSP.gif)
+- [screenshot](https://s1.gifyu.com/images/webstorm64_rDATvCkhSP.gif)
 
-References
+
+
+📁 More task examples
 -
 
-more tasks examples:
 ```javascript
 const Captchaai = require('captchaai-npm');
 const handler = new Captchaai('apikey');
