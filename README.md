@@ -205,7 +205,6 @@ await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdom
   - This task type AntiKasadaTask require that you send us your proxies.
 
 - [**AntiAkamaiBMPTask: Solving Akamai Mobile.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426407/AntiKasadaTask+solving+Kasada)
-  - This task type AntiKasadaTask require that you send us your proxies.
 
 Verbose level
 -
