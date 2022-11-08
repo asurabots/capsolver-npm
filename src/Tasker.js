@@ -1,26 +1,24 @@
-const Validation = require("./Validation");
+const Validation = require('./Validation');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const axios = require('axios');
 
 class Tasker {
-    constructor(type, apiKey, websiteURL, websiteKey=undefined, verbose) {
+    constructor(type, apiKey, verbose) {
         this.apikey = apiKey;
         this.verbose = verbose;
         this.parameters = new Validation().parameters;
-        this.taskData = { "type":type, "websiteURL": websiteURL , "websiteKey": websiteKey };
+        this.taskData = { 'type' : type, 'appId' : 'AF0F28E5-8245-49FD-A3FD-43D576C0E9B3' };
     }
 
     /**
      * api.captchaai.io/createTask
      */
-    async createTask() {
+    async createTask(url=undefined) {
         let self = this;
-        if(this.taskData.websiteURL === null) delete this.taskData.websiteURL;
-        if(this.taskData.websiteKey === null) delete this.taskData.websiteKey;
 
-        let v = this.validate(this.taskData);
+        this.validate(this.taskData);
 
-        let axiosConfig = { url: 'https://api.captchaai.io/createTask', headers: { }, method: 'post', data: { "clientKey": this.apikey.toString(), "task": this.taskData } };
+        let axiosConfig = { url: (url === undefined) ? 'https://api.captchaai.io/createTask' : url, headers: { }, method: 'post', data: { 'clientKey': this.apikey.toString(), 'task': this.taskData } };
         let r=await axios(axiosConfig)
             .then(async function (response) {
                 if(self.verbose === 2){ console.log(response.data); }
@@ -47,7 +45,7 @@ class Tasker {
     async getTaskResult(taskId, rqDelay){
         let self = this; let status = ''; let fails = 0; let r = null;
         if(taskId === undefined) return;
-        let requestData = { "clientKey":this.apikey, "taskId": taskId };
+        let requestData = { 'clientKey':this.apikey, 'taskId': taskId };
         let axiosConfig = { method: 'post', url: 'https://api.captchaai.io/getTaskResult', headers: { }, data: requestData };
         while(status !== 'ready'){
             await sleep(rqDelay);
