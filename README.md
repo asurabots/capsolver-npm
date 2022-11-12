@@ -11,7 +11,7 @@ Run with this repo and find a fast way to perform web/api automations.
 
 now binded: 🔥 *AntiKasada & AntiAkamaiBMP. 🔥 HCaptcha & FunCaptcha Images Classification.*
 
-[![](https://img.shields.io/badge/1.2.5-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
+[![](https://img.shields.io/badge/1.2.6-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
 [![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
 [![](https://img.shields.io/badge/API_doc-captchaai.atlassian.net-blue)](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/393295/All+task+types+and+price+list)
 
