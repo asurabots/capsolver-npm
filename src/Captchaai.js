@@ -24,7 +24,7 @@ class Captchaai {
             .then(function (response) {
                 if(self.verbose === 2){ console.log(response.data); }
                 if(response.data.errorId !== 0){ return { 'error':-1, 'statusText':response.status, 'apiResponse':response.data } }
-                return { 'error':0, 'statusText':response.status, 'apiResponse':response.data, 'solution':response.data.solution }
+                return { 'error':0, 'statusText':response.status, 'apiResponse':response.data }
             })
             .catch(function (error) {
                 if(error.response === undefined){ return error; }
@@ -60,7 +60,7 @@ class Captchaai {
      */
     async runAnyTask(taskData) {
         if(taskData.hasOwnProperty('type')){
-            let tasker = new Tasker(null, this.apikey, null, null, this.verbose);
+            let tasker = new Tasker(null, this.apikey, this.verbose);
             tasker.taskData = taskData;
             if(taskData.hasOwnProperty('proxyInfo')){ this.attachProxy(tasker, taskData.proxyInfo); }
             let tasked = await tasker.createTask();
