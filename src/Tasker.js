@@ -73,7 +73,8 @@ class Tasker {
      * @param {object} taskData - taskData schema
      */
     validate(taskData){
-        if(Object.keys(this.parameters).includes(taskData.type)){ // ?is a existing captcha task
+        const parameters = Object.keys(this.parameters).reduce((c, k) => (c[k.toLowerCase()] = this.parameters[k], c), {});
+        if(Object.keys(parameters).includes(taskData.type.toLowerCase())){ // ?is a existing captcha task
             this.parameters[taskData.type].forEach(parameter => {
                 if(parameter.required){
                     if(taskData[parameter.name] === undefined
