@@ -1,19 +1,20 @@
-📁 Examples
+PM2
 -
 
 - **Perform test/benchmark for a website with multiple PM2 process.**
 
 1. Install pm2 globally:  `npm install -g pm2`.
-3. Set [config file](https://www.google.com) as your preference.
+3. Set [config file](https://github.com/0qwertyy/captchaai-npm/blob/master/examples/ecosystem.config.js) as your preference.
 4. Control processes: `pm2 start ecosystem.config.js` & `pm2 delete all`.
 5. Print logs for all process: `pm2 logs`.
 
-![](https://s1.gifyu.com/images/webstorm64_rDATvCkhSP.gif)
+- [screenshot](https://s1.gifyu.com/images/webstorm64_rDATvCkhSP.gif)
 
-References
+
+
+📁 More task examples
 -
 
-more tasks examples:
 ```javascript
 const Captchaai = require('captchaai-npm');
 const handler = new Captchaai('apikey');
