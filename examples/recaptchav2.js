@@ -1,5 +1,5 @@
-const Captchaai = require('captchaai-npm');
-const handler = new Captchaai('CAI-XXX', 1);
+const CapSolver = require('../src/CapSolver');
+const handler = new CapSolver('CAI-XXX...', 1);
 
 (async function () {
     await handler.recaptchav2proxyless('https://www.nakedcph.com/en/auth/view', '6LeNqBUUAAAAAFbhC-CS22rwzkZjr_g4vMmqD_qo')

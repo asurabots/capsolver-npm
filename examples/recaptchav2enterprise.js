@@ -1,5 +1,5 @@
-const Captchaai = require('captchaai-npm');
-const handler = new Captchaai('CAI-XXX', 1);
+const CapSolver = require('../src/CapSolver');
+const handler = new CapSolver('CAI-XXX...', 1);
 
 (async function () {
     await handler.recaptchav2enterpriseproxyless('https://login.yahoo.net', '6Ldbp6saAAAAAAwuhsFeAysZKjR319pRcKUitPUO')
