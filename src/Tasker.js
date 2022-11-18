@@ -11,12 +11,12 @@ class Tasker {
     }
 
     /**
-     * api.captchaai.io/createTask
+     * api.capsolver.com/createTask
      */
     async createTask(url=undefined) {
         let self = this;
         this.validate(this.taskData);
-        let req = { url: (url === undefined) ? 'https://api.captchaai.io/createTask' : url, headers: { }, method: 'post', data: { 'clientKey': this.apikey.toString(), 'appId': 'AF0F28E5-8245-49FD-A3FD-43D576C0E9B3', 'task': this.taskData } };
+        let req = { url: (url === undefined) ? 'https://api.capsolver.com/createTask' : url, headers: { }, method: 'post', data: { 'clientKey': this.apikey.toString(), 'appId': 'AF0F28E5-8245-49FD-A3FD-43D576C0E9B3', 'task': this.taskData } };
         let handled = await axios(req)
             .then(async function (response) {
                 if(self.verbose === 2){ console.log(response.data); }
@@ -33,7 +33,7 @@ class Tasker {
     }
 
     /**
-     * api.captchaai.io/getTaskResult - retrieve results loop
+     * api.capsolver.com/getTaskResult - retrieve results loop
      * @param {string} taskId - associated taskId
      * @param {number} rqDelay - retrieve results delay in ms
      */
@@ -41,7 +41,7 @@ class Tasker {
         let self = this; let status = ''; let fails = 0; let handled = null;
         if(taskId === undefined) return;
         let requestData = { 'clientKey':this.apikey, 'taskId': taskId };
-        let req = { method: 'post', url: 'https://api.captchaai.io/getTaskResult', headers: { }, data: requestData };
+        let req = { method: 'post', url: 'https://api.capsolver.com/getTaskResult', headers: { }, data: requestData };
         while(status !== 'ready'){
             await sleep(rqDelay);
             if(fails > 10) break;
@@ -61,7 +61,7 @@ class Tasker {
                     return { 'error':-1, 'statusText':error.response.status, 'apiResponse':error.response.data }
                 });
             if(this.verbose !== 0)
-                console.log('[' + this.taskData.type + ']['+handled.statusText+'][api.captchaai.io/getTaskResult][for: ' + (this.taskData.websiteURL ? this.taskData.websiteURL : this.taskData.captchaUrl) + '][taskId: '+taskId+'][status: '+status+']');
+                console.log('[' + this.taskData.type + ']['+handled.statusText+'][api.capsolver.com/getTaskResult][for: ' + (this.taskData.websiteURL ? this.taskData.websiteURL : this.taskData.captchaUrl) + '][taskId: '+taskId+'][status: '+status+']');
             if(this.verbose === 2){ console.log(handled.apiResponse)}
             if(handled.error !== 0) break;
         }
