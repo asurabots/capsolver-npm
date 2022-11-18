@@ -2,9 +2,9 @@ const Tasker = require("./Tasker");
 const axios = require("axios");
 
 /**
- * Captchaai.io Tasks Handler
+ * CapSolver.io Tasks Handler
  */
-class Captchaai {
+class CapSolver {
     constructor(apikey, verbose=0, rqdelay=2500) { this.apikey = apikey; this.verbose = verbose; this.rqdelay = rqdelay; this.init(); }
 
     /** * Set-up handler **/
@@ -16,11 +16,11 @@ class Captchaai {
     async balance(){ let handled = await this.getBalance(); return  handled.apiResponse.balance ? parseFloat(handled.apiResponse.balance): handled; }
 
     /**
-     * One request to api.captchaai.io/getBalance
+     * One request to api.capsolver.com/getBalance
      */
     async getBalance(){
         let self = this;
-        let response = await axios({ method: 'post', url: 'https://api.captchaai.io/getBalance', headers: { }, data: { "clientKey": this.apikey } })
+        let response = await axios({ method: 'post', url: 'https://api.capsolver.com/getBalance', headers: { }, data: { "clientKey": this.apikey } })
             .then(function (response) {
                 if(self.verbose === 2){ console.log(response.data); }
                 if(response.data.errorId !== 0){ return { 'error':-1, 'statusText':response.status, 'apiResponse':response.data } }
@@ -275,7 +275,7 @@ class Captchaai {
         if(onlyCD!==null) { tasker.taskData.onlyCD = onlyCD; }
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask('https://api.captchaai.io/kasada/invoke');
+        let tasked = await tasker.createTask('https://api.capsolver.com/kasada/invoke');
         if(tasked.error !== 0) return tasked;
         return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
     }
@@ -289,7 +289,7 @@ class Captchaai {
         if(deviceId!==null) { tasker.taskData.version = deviceId; }
         if(deviceName!==null) { tasker.taskData.version = deviceName; }
         if(count!==null) { tasker.taskData.userAgent = count; }
-        return await tasker.createTask('https://api.captchaai.io/akamaibmp/invoke');
+        return await tasker.createTask('https://api.capsolver.com/akamaibmp/invoke');
     }
 
     // unsupported methods:
@@ -301,4 +301,4 @@ class Captchaai {
 
 }
 
-module.exports = Captchaai;
+module.exports = CapSolver;
