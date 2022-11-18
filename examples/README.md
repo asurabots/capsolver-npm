@@ -4,7 +4,7 @@ PM2
 - **Perform test/benchmark for a website with multiple PM2 process.**
 
 1. Install pm2 globally:  `npm install -g pm2`.
-3. Set [config file](https://github.com/0qwertyy/captchaai-npm/blob/master/examples/ecosystem.config.js) as your preference.
+3. Set [config file](https://github.com/0qwertyy/capsolver-npm/blob/master/examples/ecosystem.config.js) as your preference.
 4. Control processes: `pm2 start ecosystem.config.js` & `pm2 delete all`.
 5. Print logs for all process: `pm2 logs`.
 
@@ -16,17 +16,17 @@ PM2
 -
 
 ```javascript
-const Captchaai = require('captchaai-npm');
-const handler = new Captchaai('apikey');
+const CapSolver = require('capsolver-npm');
+const handler = new CapSolver('apikey');
 const taskData =
     { type : 'HCaptchaTaskProxyless', websiteURL : 'https://website.com/', websiteKey : '000000-00000-000000-000000000' }
 await handler.runAnyTask(taskData).then(response => { console.log(response); });
 ```
 
 ```javascript
-import Captchaai from 'captchaai-npm'; // import as ES6 module
+import CapSolver from 'capsolver-npm'; // import as ES6 module
 const apikey = 'CAI-XXX...';
-const handler = new Captchaai(apikey);
+const handler = new CapSolver(apikey);
 
 // *proxyType parameter supports for: http, https, socks4, socks5
 await handler.recaptchav3(
@@ -37,4 +37,4 @@ await handler.recaptchav3(
 ).then(response => { console.log(response); }) 
 ```
 
-[*Building fast test-project with captchaai-npm](https://www.youtube.com/watch?v=s9OyE_pBPyE)
+[*Building fast test-project with capsolver-npm](https://www.youtube.com/watch?v=s9OyE_pBPyE)

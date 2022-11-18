@@ -1,23 +1,23 @@
-# captchaai.io api wrapper🧠 (tasks handler)
+# capsolver.com api wrapper🧠 (tasks handler)
 
 Want you to get verified captcha **tokens** calling one function within your NodeJS application?
 
 Run with this repo and find a fast way to perform web/api automations.
 
-- **Manage to solve captcha challenges with AI in a NodeJS app ([captcha service based](https://captchaai.io/)).**
-- ❗ An API key it's **required**. [**Get here.**](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
-- 👀 **Puppeteer integration at**  [**puppeteer-extra-plugin-captchaai**](https://github.com/0qwertyy/puppeteer-extra-plugin-captchaai).
+- **Manage to solve captcha challenges with AI in a NodeJS app ([captcha service based](https://capsolver.com/)).**
+- ❗ An API key it's **required**. [**Get here.**](https://dashboard.capsolver.com/passport/register?inviteCode=CHhA_5os)
+- 👀 **Puppeteer integration at**  [**puppeteer-extra-plugin-capsolver**](https://github.com/0qwertyy/puppeteer-extra-plugin-capsolver).
 
 
 now binded: 🔥 *AntiKasada & AntiAkamaiBMP. 🔥 HCaptcha & FunCaptcha Images Classification.*
 
-[![](https://img.shields.io/badge/1.2.7-captchaai--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/captchaai-npm)
-[![](https://img.shields.io/badge/provider-captchaai.io-blue)](https://dashboard.captchaai.io/passport/register?inviteCode=CHhA_5os)
-[![](https://img.shields.io/badge/API_doc-captchaai.atlassian.net-blue)](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/393295/All+task+types+and+price+list)
+[![](https://img.shields.io/badge/1.0.0-capsolver--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/capsolver-npm)
+[![](https://img.shields.io/badge/provider-capsolver.com-blue)](https://dashboard.capsolver.com/passport/register?inviteCode=CHhA_5os)
+[![](https://img.shields.io/badge/API_doc-captchaai.atlassian.net-blue)](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/393295/All+task+types+and+price+list)
 
 ⬇️ Install
 -
-    npm i captchaai-npm
+    npm i capsolver-npm
 
 ✋ Usage
 -
@@ -25,13 +25,13 @@ now binded: 🔥 *AntiKasada & AntiAkamaiBMP. 🔥 HCaptcha & FunCaptcha Images 
 1. Import module.
 
    ```javascript 
-    const Captchaai = require('captchaai-npm');
+    const CapSolver = require('capsolver-npm');
     ```
 
 3. Declare singleton/handler.
 
    ```javascript 
-    const handler = new Captchaai(apikey); // task handler / solver
+    const handler = new CapSolver(apikey); // task handler / solver
     ```
 
 
@@ -40,11 +40,11 @@ now binded: 🔥 *AntiKasada & AntiAkamaiBMP. 🔥 HCaptcha & FunCaptcha Images 
 
 **1️⃣ task-bind methods**
 
-*example: check captchaai.io balance + run for one `.hcaptchaproxyless()`*
+*example: check capsolver.com balance + run for one `.hcaptchaproxyless()`*
 
 ```javascript
-const Captchaai = require('captchaai-npm');
-const handler = new Captchaai('apikey', 1); // verbose level 1
+const CapSolver = require('capsolver-npm');
+const handler = new CapSolver('apikey', 1); // verbose level 1
 let b = await handler.balance();
 if(b > 0){  // usd balance
     await handler.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
@@ -58,8 +58,8 @@ if(b > 0){  // usd balance
 *example: run for one HCaptchaTask with `.hcaptcha()` with custom proxy.*
 
 ```javascript
-const Captchaai = require('captchaai-npm');
-const handler = new Captchaai('apikey', 1); // verbose level 1
+const CapSolver = require('capsolver-npm');
+const handler = new CapSolver('apikey', 1); // verbose level 1
 let b = await handler.balance();
 if(b > 0){  // usd balance
     await handler.hcaptcha(
@@ -78,8 +78,8 @@ if(b > 0){  // usd balance
 
 *example: build & run `taskData` schema with custom proxy for HCaptchaTask.*
 ```javascript
-const Captchaai = require('captchaai-npm');
-const handler = new Captchaai('apikey');
+const CapSolver = require('capsolver-npm');
+const handler = new CapSolver('apikey');
 const taskData =    // build a task
     { 
     type : 'HCaptchaTask',
@@ -105,7 +105,7 @@ handler.runAnyTask(taskData)
 |:--------------| :------- |:-----------------------------------------------------------|
 | `error`       | `number` | [*-1*] Request/Solving **error**. [*0*] **Success** solve. |
 | `statusText`  | `string` | HTTP status string.                                        |
-| `apiResponse` | `object` | **Results/solution** (captchaai.io API response).          |
+| `apiResponse` | `object` | **Results/solution** (capsolver.com API response).          |
 | `solution`    | `object` | **Solution got from success solve**.                       |
 
 
@@ -138,9 +138,9 @@ handler.runAnyTask(taskData)
 }
 ```
 
-- Each method it's an easy way to **launch and handle multiple requests** to captchaai API.
-- Some determinated captcha tasks have required arguments which mostly are of type string or type object. Anycase, this is described in captchaai.io official docs page.
-- [**reffered docs.**](https://docs.captchaai.io/)
+- Each method it's an easy way to **launch and handle multiple requests** to capsolver API.
+- Some determinated captcha tasks have required arguments which mostly are of type string or type object. Anycase, this is described in capsolver.com official docs page.
+- [**reffered docs.**](https://docs.capsolver.com/)
 
 
 # ⚙️Supported API methods
@@ -148,7 +148,7 @@ handler.runAnyTask(taskData)
 |:-------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `await handler.balance()` | directly the float value or an error object |
 | `await handler.getBalance()` | succes or error object |
-| `await handler.runAnyTask(taskData)` | handle task results for a `taskData` schema passed. In order to build this object, use [**!reffered docs**](https://docs.captchaai.io/) and **check parameters by catpcha task type**. |
+| `await handler.runAnyTask(taskData)` | handle task results for a `taskData` schema passed. In order to build this object, use [**!reffered docs**](https://docs.capsolver.com/) and **check parameters by catpcha task type**. |
 
 * `taskData` schema it's shown in examples.
 * `proxyInfo` schema has 2 versions:
@@ -201,28 +201,28 @@ Verbose level
 -
 
 ```javascript
-const handler = new Captchaai(apikey, verbose); // on handler initialization
+const handler = new CapSolver(apikey, verbose); // on handler initialization
 ```
 
 Verbose level `undefined || 0`: Dont print logs, just get response.
 
 Verbose level `1`: Print logs about performed requests during execution.
 
-Verbose level `2`: Appends full captchaai api response in verbose level 1 outputs.
+Verbose level `2`: Appends full capsolver api response in verbose level 1 outputs.
 
 References
 -
 
-- [**HCaptchaClassification: Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
+- [**HCaptchaClassification: Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
     - Responds through image recognition.
     - Send a base64 **images array** with `.hcaptchaclassification(question, queries, coordinate)`.
-    - 👀 Find [**here**](https://github.com/0qwertyy/puppeteer-extra-plugin-captchaai) an **integration within `puppeteer-extra`**.
+    - 👀 Find [**here**](https://github.com/0qwertyy/puppeteer-extra-plugin-capsolver) an **integration within `puppeteer-extra`**.
 
-- [**FunCaptchaClassification (beta): Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
+- [**FunCaptchaClassification (beta): Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
     - Send a base64 **screenshot image** with `.funcaptchaclassification(image, question)`.
 
-- [**AntiKasadaTask: Solving Kasada.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426407/AntiKasadaTask+solving+Kasada)
+- [**AntiKasadaTask: Solving Kasada.**](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/426407/AntiKasadaTask+solving+Kasada)
     - This task type AntiKasadaTask require that you send us your proxies.
 
-- [**AntiAkamaiBMPTask: Solving Akamai Mobile.**](https://captchaai.atlassian.net/wiki/spaces/CAPTCHAAI/pages/426407/AntiKasadaTask+solving+Kasada)
+- [**AntiAkamaiBMPTask: Solving Akamai Mobile.**](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/426407/AntiKasadaTask+solving+Kasada)
     - This task type AntiKasadaTask require that you send us your proxies.
