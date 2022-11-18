@@ -1,22 +1,22 @@
 {
-  "name": "captchaai-npm",
-  "version": "1.2.7",
+  "name": "capsolver-npm",
+  "version": "1.0.0",
   "description": "",
-  "main": "src/Captchaai.js",
+  "main": "src/CapSolver.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/0qwertyy/captchaai-npm.git"
+    "url": "https://github.com/0qwertyy/capsolver-npm.git"
   },
-  "keywords": ["recaptcha", "hcaptcha", "funcaptcha", "datadome", "geetest", "puppeteer-extra", "captcha-solver", "2captcha", "captchaai.io", "capmonster"],
+  "keywords": [ "recaptcha", "hcaptcha", "funcaptcha", "datadome", "geetest", "puppeteer-extra", "captcha-solver", "2captcha", "capsolver.com", "capmonster" ],
   "author": "0qwertyy",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/0qwertyy/captchaai-npm/issues"
+    "url": "https://github.com/0qwertyy/capsolver-npm/issues"
   },
-  "homepage": "https://github.com/0qwertyy/captchaai-npm",
+  "homepage": "https://github.com/0qwertyy/capsolver-npm",
   "dependencies": {
     "axios": "^0.27.2"
   }
