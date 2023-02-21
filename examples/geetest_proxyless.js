@@ -2,7 +2,13 @@ const CapSolver = require('../src/CapSolver');
 const handler = new CapSolver('CAI-XXXX ...');
 
 (async function () {
-    await handler.recaptchav2('https://www.nakedcph.com/en/auth/view', '6LeNqBUUAAAAAFbhC-CS22rwzkZjr_g4vMmqD_qo', {'proxy':'proxy.provider.io:23331:user1:password1'})
+    await handler.geetestproxyless(
+        'https://us.shein.com/user/auth/login?direction=nav',
+        null,
+        null,
+        "us.shein.com/geetest",
+        "us.shein.com/geetest",
+    )
         .then(response => {
             if (response.error === 0) {
                 console.log(response.solution)

@@ -5,12 +5,10 @@ const axios = require("axios");
  * CapSolver.io Tasks Handler
  */
 class CapSolver {
-    constructor(apikey, verbose=0, rqdelay=2500) { this.apikey = apikey; this.verbose = verbose; this.rqdelay = rqdelay; this.init(); }
+    constructor(apikey, verbose=0, rqdelay=1700) { this.apikey = apikey; this.verbose = verbose; this.rqdelay = rqdelay; this.init(); }
 
     /** * Set-up handler **/
-    init(){
-        if(this.verbose === 2){ console.log('[' + this.constructor.name + '][Verbose level '+this.verbose+' running at: '+this.apikey+']'); }
-    }
+    init(){ if(this.verbose === 2){ console.log('[' + this.constructor.name + '][Verbose level '+this.verbose+' running at: '+this.apikey+']'); } }
 
     /** * Return USD balance as float number **/
     async balance(){ let handled = await this.getBalance(); return  handled.apiResponse.balance ? parseFloat(handled.apiResponse.balance): handled; }
@@ -49,7 +47,6 @@ class CapSolver {
             if(proxyInfo.proxyLogin !== null || true){ tasker.taskData.proxyLogin = proxyInfo.proxyLogin; }
             if(proxyInfo.proxyPassword !== null || true){ tasker.taskData.proxyPassword = proxyInfo.proxyPassword; }
         }
-        if(this.verbose === 1) { console.log('['+ this.constructor.name +'][proxyInfo]['+proxyInfo.proxyAddress+':'+proxyInfo.proxyPort+']'); }
         return tasker;
     }
 
@@ -57,25 +54,46 @@ class CapSolver {
      * Handle results for one specific captcha task
      *
      * @param {object} taskData - taskData schema
+     * @param retrieve
      */
-    async runAnyTask(taskData) {
+    async runAnyTask(taskData, retrieve=true) {
         if(taskData.hasOwnProperty('type')){
-            let tasker = new Tasker(null, this.apikey, this.verbose);
+            let tasker = new Tasker(null, this.apikey, this.verbose, retrieve);
             tasker.taskData = taskData;
             if(taskData.hasOwnProperty('proxyInfo')){ this.attachProxy(tasker, taskData.proxyInfo); }
             let tasked = await tasker.createTask();
             if(tasked.error !== 0) return tasked;
             return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
-        }else{ throw TypeError('taskData has not type property.'); }
+        }else{
+            throw TypeError('taskData has not type property.');
+        }
     }
 
     /** Fast-bind methods **/
+
+    /** mtcaptcha **/
+    async mtcaptcha(websiteURL, websiteKey, proxyInfo){
+        let tasker = new Tasker('MtCaptchaTask', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
+        this.attachProxy(tasker, proxyInfo);
+        return await tasker.execute(this.rqdelay);
+    }
+
+    /** img2txt **/
+    async mtcaptchaproxyless(websiteURL, websiteKey){
+        let tasker = new Tasker('MtCaptchaTaskProxyLess', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
+        return await tasker.execute(this.rqdelay);
+    }
+
     /** img2txt **/
     async image2text(body){
-        let tasker = new Tasker('ImageToTextTask', this.apikey, this.verbose);
+        let tasker = new Tasker('ImageToTextTask', this.apikey, this.verbose, false);
         // binding
         tasker.taskData.body = body;
-        return await tasker.createTask();
+        return await tasker.execute(this.rqdelay);
     }
 
     /** hcap **/
@@ -87,9 +105,7 @@ class CapSolver {
         if(isInvisible!==null) { tasker.taskData.isInvisible = true; }
         if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload; }
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
     async hcaptchaproxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, enterprisePayload=null){
@@ -99,17 +115,14 @@ class CapSolver {
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent }
         if(isInvisible!==null) { tasker.taskData.isInvisible = true }
         if(enterprisePayload!==null) { tasker.taskData.isEnterprise = true; tasker.taskData.enterprisePayload = enterprisePayload }
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
-    async hcaptchaclassification(question, base64, coordinate=true){
-        let tasker = new Tasker('HCaptchaClassification', this.apikey, this.verbose);
+    async hcaptchaclassification(question, base64){
+        let tasker = new Tasker('HCaptchaClassification', this.apikey, this.verbose, false);
         tasker.taskData.queries = base64;
         tasker.taskData.question = question;
-        tasker.taskData.coordinate = coordinate;
-        return await tasker.createTask();
+        return await tasker.execute(this.rqdelay);
     }
 
     /** recap **/
@@ -122,9 +135,7 @@ class CapSolver {
         if(recaptchaDataSValue!==null) { tasker.taskData.recaptchaDataSValue = recaptchaDataSValue }
         if(cookies!==null) { tasker.taskData.cookies = cookies }
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
     async recaptchav2proxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null){
@@ -135,9 +146,7 @@ class CapSolver {
         if(isInvisible!==null) { tasker.taskData.isInvisible = true }
         if(recaptchaDataSValue!==null) { tasker.taskData.recaptchaDataSValue = recaptchaDataSValue }
         if(cookies!==null) { tasker.taskData.cookies = cookies }
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
     async recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null){
@@ -149,9 +158,7 @@ class CapSolver {
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         if(cookies!==null) { tasker.taskData.cookies = cookies; }
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
     async recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null){
@@ -162,9 +169,7 @@ class CapSolver {
         if(apiDomain!==null) { tasker.taskData.apiDomain = apiDomain; }
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         if(cookies!==null) { tasker.taskData.cookies = cookies; }
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
     async recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null){
@@ -174,9 +179,7 @@ class CapSolver {
         tasker.taskData.pageAction = pageAction;
         if(minScore!==null) { tasker.taskData.minScore = minScore; }
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
     async recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore=null){
@@ -185,9 +188,34 @@ class CapSolver {
         tasker.taskData.websiteKey = websiteKey;
         tasker.taskData.pageAction = pageAction;
         if(minScore!==null) { tasker.taskData.minScore = minScore; }
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
+    }
+
+    async recaptchav3enterprise(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null, enterprisePayload=null, apiDomain=null, userAgent=null, cookies=null){
+        let tasker = new Tasker('RecaptchaV3Task', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
+        tasker.taskData.pageAction = pageAction;
+        if(minScore!==null) { tasker.taskData.minScore = minScore; }
+        if(enterprisePayload!==null) { tasker.taskData.enterprisePayload = enterprisePayload; }
+        if(apiDomain!==null) { tasker.taskData.apiDomain = apiDomain; }
+        if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
+        if(cookies!==null) { tasker.taskData.cookies = cookies; }
+        this.attachProxy(tasker, proxyInfo);
+        return await tasker.execute(this.rqdelay);
+    }
+
+    async recaptchav3enterpriseproxyless(websiteURL, websiteKey, pageAction, minScore=null, enterprisePayload=null, apiDomain=null, userAgent=null, cookies=null){
+        let tasker = new Tasker('RecaptchaV3TaskProxyless', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
+        tasker.taskData.pageAction = pageAction;
+        if(minScore!==null) { tasker.taskData.minScore = minScore; }
+        if(enterprisePayload!==null) { tasker.taskData.enterprisePayload = enterprisePayload; }
+        if(apiDomain!==null) { tasker.taskData.apiDomain = apiDomain; }
+        if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
+        if(cookies!==null) { tasker.taskData.cookies = cookies; }
+        return await tasker.execute(this.rqdelay);
     }
 
     /** datadome **/
@@ -197,13 +225,11 @@ class CapSolver {
         tasker.taskData.captchaUrl = captchaUrl;
         tasker.taskData.userAgent = userAgent;
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
     /** funcap **/
-    async funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent = null, data=null){
+    async funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent=null, data=null){
         let tasker = new Tasker('FunCaptchaTask', this.apikey, this.verbose);
         tasker.taskData.websiteURL = websiteURL;
         tasker.taskData.websitePublicKey = websitePublicKey;
@@ -211,93 +237,72 @@ class CapSolver {
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         if(data!==null) { tasker.taskData.data = data; }
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
-    async funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent = null, data=null){
+    async funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent=null, data=null){
         let tasker = new Tasker('FunCaptchaTaskProxyless', this.apikey, this.verbose);
         tasker.taskData.websiteURL = websiteURL;
         tasker.taskData.websitePublicKey = websitePublicKey;
         tasker.taskData.funcaptchaApiJSSubdomain = funcaptchaApiJSSubdomain;
         if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
         if(data!==null) { tasker.taskData.data = data; }
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
     async funcaptchaclassification(base64, question){
-        let tasker = new Tasker('FunCaptchaClassification', this.apikey, this.verbose);
+        let tasker = new Tasker('FunCaptchaClassification', this.apikey, this.verbose, false);
         tasker.taskData.image = base64;
         tasker.taskData.question = question;
-        return await tasker.createTask();
+        return await tasker.execute(this.rqdelay);
     }
 
     /** geetest **/
-    async geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version=null, userAgent=null, geetestGetLib=null, initParameters=null){
+    async geetest(websiteURL, gt=null, challenge=null, proxyInfo, geetestApiServerSubdomain=null, captchaId=null){
         let tasker = new Tasker('GeeTestTask', this.apikey, this.verbose);
         tasker.taskData.websiteURL = websiteURL;
-        tasker.taskData.gt = gt;
-        tasker.taskData.challenge = challenge;
-        tasker.taskData.geetestApiServerSubdomain = geetestApiServerSubdomain;
-        if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
-        if(geetestGetLib!==null) { tasker.taskData.geetestGetLib = geetestGetLib; }
-        if(version!==null) { tasker.taskData.version = version; }
-        if(initParameters!==null) { tasker.taskData.initParameters = initParameters; }
+        if(challenge!==null) { tasker.taskData.challenge = challenge; }
+        if(gt!==null) { tasker.taskData.gt = gt; }
+        if(geetestApiServerSubdomain!==null) { tasker.taskData.geetestApiServerSubdomain = geetestApiServerSubdomain; }
+        if(captchaId!==null) { tasker.taskData.captchaId = captchaId; }
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        return await tasker.execute(this.rqdelay);
     }
 
-    async geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version=null, userAgent=null, geetestGetLib=null, initParameters=null){
+    async geetestproxyless(websiteURL, gt=null, challenge=null, geetestApiServerSubdomain=null, captchaId=null){
         let tasker = new Tasker('GeeTestTaskProxyless', this.apikey, this.verbose);
         tasker.taskData.websiteURL = websiteURL;
-        tasker.taskData.gt = gt;
-        tasker.taskData.challenge = challenge;
-        tasker.taskData.geetestApiServerSubdomain = geetestApiServerSubdomain;
-        if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
-        if(geetestGetLib!==null) { tasker.taskData.geetestGetLib = geetestGetLib; }
-        if(version!==null) { tasker.taskData.version = version; }
-        if(initParameters!==null) { tasker.taskData.initParameters = initParameters; }
-        let tasked = await tasker.createTask();
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        if(challenge!==null) { tasker.taskData.challenge = challenge; }
+        if(gt!==null) { tasker.taskData.gt = gt; }
+        if(geetestApiServerSubdomain!==null) { tasker.taskData.geetestApiServerSubdomain = geetestApiServerSubdomain; }
+        if(captchaId!==null) { tasker.taskData.captchaId = captchaId; }
+        return await tasker.execute(this.rqdelay);
     }
 
-    /** antikadasa **/
-    async antikasada(pageURL, proxyInfo, onlyCD=null, userAgent=null){
-        let tasker = new Tasker('isnotcaptcha', this.apikey, this.verbose);
-        delete tasker.taskData.type;
-        tasker.taskData.pageURL = pageURL;
-        if(onlyCD!==null) { tasker.taskData.onlyCD = onlyCD; }
-        if(userAgent!==null) { tasker.taskData.userAgent = userAgent; }
+    /** anticloudflare turnstile captcha **/
+    async antiturnstile(websiteURL, websiteKey, proxyInfo, metadata=null){
+        let tasker = new Tasker('AntiCloudflareTask', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        tasker.taskData.websiteKey = websiteKey;
         this.attachProxy(tasker, proxyInfo);
-        let tasked = await tasker.createTask('https://api.capsolver.com/kasada/invoke');
-        if(tasked.error !== 0) return tasked;
-        return await tasker.getTaskResult(tasked.apiResponse.taskId, this.rqdelay);
+        if(metadata!==null) { tasker.taskData.metadata = metadata; }
+        return await tasker.execute(this.rqdelay);
     }
 
-    /** antiakamaibmp **/
-    async antiakamaibmp(packageName, version=null, deviceId=null, deviceName=null, count=null){
-        let tasker = new Tasker('isnotcaptcha', this.apikey, this.verbose);
-        delete tasker.taskData.type;
-        tasker.taskData.packageName = packageName;
-        if(version!==null) { tasker.taskData.version = version; }
-        if(deviceId!==null) { tasker.taskData.version = deviceId; }
-        if(deviceName!==null) { tasker.taskData.version = deviceName; }
-        if(count!==null) { tasker.taskData.userAgent = count; }
-        return await tasker.createTask('https://api.capsolver.com/akamaibmp/invoke');
+    /** anticloudflare challenge **/
+    async anticloudflare(websiteURL, proxyInfo, metadata=null, html=null){
+        let tasker = new Tasker('AntiCloudflareTask', this.apikey, this.verbose);
+        tasker.taskData.websiteURL = websiteURL;
+        this.attachProxy(tasker, proxyInfo);
+        if(metadata!==null) { tasker.taskData.metadata = metadata; }
+        if(html!==null) { tasker.taskData.html = html; }
+        return await tasker.execute(this.rqdelay);
     }
 
     // unsupported methods:
-    // ❌ ReCaptchaV2Classification
-    // ✅ HCaptchaClassification (added on 1.2.1)
-    // ✅ FunCaptchaClassification (added on 1.2.4)
-    // ✅ AntiKasadaTask (added on 1.2.4)
-    // ✅ AntiAkamaiBMPTask (added on 1.2.4)
+    // ❌ ReCaptchaClassification
+    // ❌ VoiceRecognition
+    // ❌ Perimeterx
 
 }
 

@@ -1,15 +1,14 @@
-PM2
+PM2 Benchmark
 -
 
-- **Perform test/benchmark for a website with multiple PM2 process.**
+- **Perform tests for a website with multiple PM2 processes.**
 
 1. Install pm2 globally:  `npm install -g pm2`.
-3. Set [config file](https://github.com/0qwertyy/capsolver-npm/blob/master/examples/ecosystem.config.js) as your preference.
+3. Set [pm2 config file](https://github.com/0qwertyy/capsolver-npm/blob/master/examples/ecosystem.config.js) as your preference.
 4. Control processes: `pm2 start ecosystem.config.js` & `pm2 delete all`.
 5. Print logs for all process: `pm2 logs`.
 
-- [screenshot](https://s1.gifyu.com/images/webstorm64_rDATvCkhSP.gif)
-
+- [screenshot](https://s3.gifyu.com/images/webstorm64_pvt9zUKloT.gif)
 
 
 📁 More task examples

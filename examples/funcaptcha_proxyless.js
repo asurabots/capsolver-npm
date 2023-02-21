@@ -2,7 +2,7 @@ const CapSolver = require('../src/CapSolver');
 const handler = new CapSolver('CAI-XXXX ...');
 
 (async function () {
-    await handler.recaptchav2('https://www.nakedcph.com/en/auth/view', '6LeNqBUUAAAAAFbhC-CS22rwzkZjr_g4vMmqD_qo', {'proxy':'proxy.provider.io:23331:user1:password1'})
+    await handler.funcaptchaproxyless('https://thecheesecakefactory.cashstar.com/', '84E1DACC-3B8E-04D6-6E35-2A7D2B8ACFE1', 'client-api.arkoselabs.com')
         .then(response => {
             if (response.error === 0) {
                 console.log(response.solution)

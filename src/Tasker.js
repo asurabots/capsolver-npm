@@ -3,11 +3,25 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const axios = require('axios');
 
 class Tasker {
-    constructor(type, apiKey, verbose) {
+    constructor(type, apiKey, verbose, retrieve=true) {
         this.apikey = apiKey;
         this.verbose = verbose;
+        this.retrieve = retrieve;
         this.parameters = new Validation().parameters;
         this.taskData = { 'type' : type };
+    }
+
+    /**
+     * executes the task
+     */
+    async execute(rqdelay){
+        if(this.retrieve === true){
+            let tasked = await this.createTask();
+            if(tasked.error !== 0) return tasked;
+            return await this.getTaskResult(tasked.apiResponse.taskId, rqdelay);
+        }else{
+            return await this.createTask();
+        }
     }
 
     /**
@@ -17,6 +31,7 @@ class Tasker {
         let self = this;
         this.validate(this.taskData);
         let req = { url: (url === undefined) ? 'https://api.capsolver.com/createTask' : url, headers: { }, method: 'post', data: { 'clientKey': this.apikey.toString(), 'appId': 'AF0F28E5-8245-49FD-A3FD-43D576C0E9B3', 'task': this.taskData } };
+        if(this.verbose === 2 ){ console.log(req); }
         let handled = await axios(req)
             .then(async function (response) {
                 if(self.verbose === 2){ console.log(response.data); }
@@ -28,26 +43,25 @@ class Tasker {
                 if(self.verbose === 2){ console.log(error.response.data); }
                 return { 'error':-1, 'statusText':error.response.status, 'apiResponse':error.response.data }
             });
-        if(this.verbose !== 0){ console.log('[' + this.taskData.type + ']['+handled.statusText+'][' + req.url + ']'); }
+        if(this.verbose === 1){ console.log('[' + this.taskData.type + '][created task][' + handled.apiResponse.taskId + ']'); }
         return handled;
     }
 
     /**
      * api.capsolver.com/getTaskResult - retrieve results loop
      * @param {string} taskId - associated taskId
-     * @param {number} rqDelay - retrieve results delay in ms
+     * @param rqdelay
      */
-    async getTaskResult(taskId, rqDelay){
+    async getTaskResult(taskId, rqdelay){
         let self = this; let status = ''; let fails = 0; let handled = null;
         if(taskId === undefined) return;
         let requestData = { 'clientKey':this.apikey, 'taskId': taskId };
         let req = { method: 'post', url: 'https://api.capsolver.com/getTaskResult', headers: { }, data: requestData };
         while(status !== 'ready'){
-            await sleep(rqDelay);
+            await sleep(rqdelay);
             if(fails > 10) break;
             handled = await axios(req)
                 .then(async function (response) {
-                    if(self.verbose === 2){ console.log(requestData); }
                     if(response.data.errorId !== 0){
                         status = response.data.errorDescription;
                         return { 'error':-1, 'statusText':response.status, 'apiResponse':response.data }
@@ -60,9 +74,8 @@ class Tasker {
                     fails++;
                     return { 'error':-1, 'statusText':error.response.status, 'apiResponse':error.response.data }
                 });
-            if(this.verbose !== 0)
-                console.log('[' + this.taskData.type + ']['+handled.statusText+'][api.capsolver.com/getTaskResult][for: ' + (this.taskData.websiteURL ? this.taskData.websiteURL : this.taskData.captchaUrl) + '][taskId: '+taskId+'][status: '+status+']');
-            if(this.verbose === 2){ console.log(handled.apiResponse)}
+            if(this.verbose === 1){ console.log('['+taskId+'][status: '+status+']'); }
+            if(this.verbose === 2){ console.log(handled.apiResponse); }
             if(handled.error !== 0) break;
         }
         return handled;
@@ -94,7 +107,6 @@ class Tasker {
         }else{
             throw Error(taskData.type+' is not a valid captcha task type.');
         }
-        // process.exit(1)
         return true;
     }
 

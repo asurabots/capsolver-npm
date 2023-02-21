@@ -1,19 +1,13 @@
-# capsolver.com api wrapper🧠 (tasks handler)
-
-Want you to get verified captcha **tokens** calling one function within your NodeJS application?
-
-Run with this repo and find a fast way to perform web/api automations.
-
-- **Manage to solve captcha challenges with AI in a NodeJS app ([captcha service based](https://capsolver.com/)).**
+# capsolver.com api wrapper🧠
+- **Manage to solve captcha challenges with AI in a NodeJS app (captcha service based).**
 - ❗ An API key it's **required**. [**Get here.**](https://dashboard.capsolver.com/passport/register?inviteCode=CHhA_5os)
 - 👀 **Puppeteer integration at**  [**puppeteer-extra-plugin-capsolver**](https://github.com/0qwertyy/puppeteer-extra-plugin-capsolver).
 
 
-now binded: 🔥 *AntiKasada & AntiAkamaiBMP. 🔥 HCaptcha & FunCaptcha Images Classification.*
+now binded: *🔥 AntiTurnstile. 🔥 AntiCloudflare. 🔥 Geetest V4.*
 
-[![](https://img.shields.io/badge/1.0.0-capsolver--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/capsolver-npm)
-[![](https://img.shields.io/badge/provider-capsolver.com-blue)](https://dashboard.capsolver.com/passport/register?inviteCode=CHhA_5os)
-[![](https://img.shields.io/badge/API_doc-captchaai.atlassian.net-blue)](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/393295/All+task+types+and+price+list)
+[![](https://img.shields.io/badge/1.0.1-capsolver--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/capsolver-npm)
+[![](https://img.shields.io/badge/documentation-docs.capsolver.com-blue)](https://docs.capsolver.com/guide/getting-started.html)
 
 ⬇️ Install
 -
@@ -27,20 +21,19 @@ now binded: 🔥 *AntiKasada & AntiAkamaiBMP. 🔥 HCaptcha & FunCaptcha Images 
    ```javascript 
     const CapSolver = require('capsolver-npm');
     ```
-
-3. Declare singleton/handler.
+2. Define tasks handler (singleton).
 
    ```javascript 
-    const handler = new CapSolver(apikey); // task handler / solver
+    const handler = new CapSolver(apikey); // captcha task handler
     ```
 
 
 
-**❗ There are 2 different versions in order to handle task results:**
+**❗ 2 version for handle captcha tasks results are the followind:**
 
-**1️⃣ task-bind methods**
+**1️⃣ task-bind methods** (handle task results in one step)
 
-*example: check capsolver.com balance + run for one `.hcaptchaproxyless()`*
+*example: check capsolver.com balance + run for one hcaptcha token (`.hcaptchaproxyless()`):*
 
 ```javascript
 const CapSolver = require('capsolver-npm');
@@ -55,7 +48,7 @@ if(b > 0){  // usd balance
 }
 ```
 
-*example: run for one HCaptchaTask with `.hcaptcha()` with custom proxy.*
+*example: run for one hcaptcha token w/ custom proxy (`.hcaptcha()`):*
 
 ```javascript
 const CapSolver = require('capsolver-npm');
@@ -65,7 +58,7 @@ if(b > 0){  // usd balance
     await handler.hcaptcha(
         'https://websiteurl.com/', 
         '000000-000000000-0000000',
-        { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" }   // 2nd proxyInfo format
+        { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" }   // fast way to use proxy
     )
     .then(async response => {
         if(response.error === 0){ console.log(response.solution) }
@@ -74,32 +67,38 @@ if(b > 0){  // usd balance
 }
 ```
 
-**2️⃣ Run any task. Build `taskData` schema for a task type.**
+**2️⃣ Run any task and build `taskData` schema for a task type.**
 
-*example: build & run `taskData` schema with custom proxy for HCaptchaTask.*
+**Check task parameters at [official docs](https://docs.capsolver.com/guide/recognition/ImageToTextTask.html) in order to bind manually captcha tasks.**
+
+*example: run for one hcaptcha token w/ custom proxy (.runAnyTask()):*
 ```javascript
-const CapSolver = require('capsolver-npm');
-const handler = new CapSolver('apikey');
+const CapSolver = require("capsolver-npm");
+const handler = new CapSolver("apikey");
 const taskData =    // build a task
     { 
-    type : 'HCaptchaTask',
-    websiteURL : 'https://website.com/', 
-    websiteKey : '000000-00000-000000-000000000',
-    // also string format is supported with `proxy`
-    // proxyInfo: { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" },
-    proxyInfo: { 'proxyType': 'http', 'proxyAddress': 'ip_address', 'proxyPort': 3221, 'proxyLogin': 'username', 'proxyPassword': 'password' },
+    type : "HCaptchaTask",
+    websiteURL : "https://website.com/", 
+    websiteKey : "000000-00000-000000-000000000",
+    proxyInfo: {
+        "proxyType": "http",
+        "proxyAddress": "ip_address",
+        "proxyPort": 3221,
+        "proxyLogin": "username",       // not required
+        "proxyPassword": "password"     // not required
+        },
     }
     
 handler.runAnyTask(taskData)
     .then(async response => {
         if(response.error === 0){ console.log(response.solution) }
-        else{ console.log('error ' + JSON.stringify(response.apiResponse)) }
+        else{ console.log("error " + JSON.stringify(response.apiResponse)) }
     });
 ```
 
-↩️ Returned object
+↩️ Get solutions
 -
-**All methods return the following schema.**
+**All methods returns the following schema:**
 
 | Parameter     | Type     | Description                                                |
 |:--------------| :------- |:-----------------------------------------------------------|
@@ -113,23 +112,23 @@ handler.runAnyTask(taskData)
 // ✅ success response
 {   
   error: 0,  
-  statusText: '200 OK',
+  statusText: "200 OK",
   apiResponse: {
     errorId: 0,
-    taskId: '4e6c33f5-bc14-44d0-979e-d5f37b072c59',
-    status: 'ready',
+    taskId: "4e6c33f5-bc14-44d0-979e-d5f37b072c59",
+    status: "ready",
     solution: {
-      gRecaptchaResponse: '03AIIukzgCys9brSNnrVbwXE9mTesvkxQ-ocK ...'
+      gRecaptchaResponse: "03AIIukzgCys9brSNnrVbwXE9mTesvkxQ-ocK ..."
     }
   }
 }
 ```
 
 ```javascript
-// ❌ ERROR_INVALID_TASK_DATA response
+// ❌ Error response (invalid API key)
 {   
   error: -1,
-  statusText: '400 Bad Request',
+  statusText: "400 Bad Request",
   apiResponse: {
         errorCode: "ERROR_INVALID_TASK_DATA",
         errorDescription: "clientKey error",
@@ -138,91 +137,123 @@ handler.runAnyTask(taskData)
 }
 ```
 
-- Each method it's an easy way to **launch and handle multiple requests** to capsolver API.
-- Some determinated captcha tasks have required arguments which mostly are of type string or type object. Anycase, this is described in capsolver.com official docs page.
-- [**reffered docs.**](https://docs.capsolver.com/)
 
+# 📖 Supported captcha tasks
 
-# ⚙️Supported API methods
 | Method                               | Returns                                                                                                                                                               |
 |:-------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `await handler.balance()` | directly the float value or an error object |
-| `await handler.getBalance()` | succes or error object |
-| `await handler.runAnyTask(taskData)` | handle task results for a `taskData` schema passed. In order to build this object, use [**!reffered docs**](https://docs.capsolver.com/) and **check parameters by catpcha task type**. |
+| `await handler.balance()` | get balance as float number |
+| `await handler.runAnyTask(taskData)` | CapSolver API response |
 
-* `taskData` schema it's shown in examples.
-* `proxyInfo` schema has 2 versions:
+Custom proxy usage (proxyInfo schema):
 
-`{ 'proxy' : 'proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword' }`
+```javascript
+// version 1
+const proxyInfo = {
+    "proxyType": "http", 
+    "proxyAddress": "ip_address",
+    "proxyPort": 3221,
+    "proxyLogin": "username", 
+    "proxyPassword": "password"
+    }
 
-or
+// version 2
+const proxyInfo = {
+    proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword"
+}
 
-`{ 'proxyType': 'http', 'proxyAddress': 'ip_address', 'proxyPort': 3221, 'proxyLogin': 'username', 'proxyPassword': 'password' }`
+```
 
 *(proxyLogin & proxyPassword are optionals)*
 
-*task-bind methods*
+task-bin methods:
 -
-retrieve solutions (tokens/coordenates) with the followings:
+
+⚙️ **HCaptcha**
+
+
+Parameter `queries`: base64 images array
 
 ```javascript
 // * check required parameters for a website with API docs.
 await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, enterprisePayload)
 await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent, isInvisible, enterprisePayload)
-await handler.hcaptchaclassification(question, queries, coordinate)
+await handler.hcaptchaclassification(question, base64)
+```
 
+⚙️ **ReCaptcha**
+
+    
+```javascript
 await handler.recaptchav2(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, recaptchaDataSValue, cookies)
-await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent, isInvisible, recaptchaDataSValue, cookies)
-await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent, enterprisePayload, apiDomain, cookies)
-await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent, enterprisePayload, apiDomain, cookies)
-await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore)
-await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore)
+await handler.recaptchav2proxyless(websiteURL, websiteKey, userAgent=null, isInvisible=null, recaptchaDataSValue=null, cookies=null)
+await handler.recaptchav2enterprise(websiteURL, websiteKey, proxyInfo, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)
+await handler.recaptchav2enterpriseproxyless(websiteURL, websiteKey, userAgent=null, enterprisePayload=null, apiDomain=null, cookies=null)
+await handler.recaptchav3(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null)
+await handler.recaptchav3proxyless(websiteURL, websiteKey, pageAction, minScore=null)
+await handler.recaptchav3enterprise(websiteURL, websiteKey, proxyInfo, pageAction, minScore=null, enterprisePayload=null, apiDomain=null, userAgent=null, cookies=null)
+await handler.recaptchav3enterpriseproxyless(websiteURL, websiteKey, pageAction, minScore=null, enterprisePayload=null, apiDomain=null, userAgent=null, cookies=null)
+```
 
+⚙️ **Datadome**
+
+
+```javascript
 await handler.datadome(websiteURL, userAgent, captchaUrl, proxyInfo)
+```
 
+⚙️ **FunCaptcha**
+
+Parameter `image`: base64 screenshot image
+```javascript
 await handler.funcaptcha(websiteURL, websitePublicKey, proxyInfo, funcaptchaApiJSSubdomain, userAgent, data)
 await handler.funcaptchaproxyless(websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, userAgent, data)
 await handler.funcaptchaclassification(image, question)
-
-await handler.geetest(websiteURL, gt, challenge, geetestApiServerSubdomain, proxyInfo, version, userAgent, geetestGetLib, initParameters)
-await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, version, userAgent, geetestGetLib, initParameters)
-
-await handler.image2text(body)
-
-await handler.antikasada(pageURL, proxyInfo, onlyCD, userAgent) // *: pageUrl & proxyInfo are always required
-await handler.antiakamaibmp(packageName, version, deviceId, deviceName, count) // *: packageName it's always required
 ```
-*pass null instead of empty for optional arguments*
+
+⚙️ **Geetest**
+
+❗ Supports for Geetest V3 & Geetest V4: Manage through [GeetestTask documentation](https://docs.capsolver.com/guide/captcha/Geetest.html).
+
+```javascript
+await handler.geetest(websiteURL, gt, challenge, proxyInfo, geetestApiServerSubdomain, captchaId)
+await handler.geetestproxyless(websiteURL, gt, challenge, geetestApiServerSubdomain, captchaId)
+```
+
+⚙️ **MTCaptcha**
+
+```javascript
+await handler.mtcaptcha(websiteURL, websiteKey, proxyInfo)
+await handler.mtcaptchaproxyless(websiteURL, websiteKey)
+```
+
+
+⚙️ **ImageToText**
+
+```javascript
+await handler.image2text(body)
+```
 
 **Currently unsupported API methods:**
-❌ ReCaptchaV2Classification
+❌ ReCaptchaV2Classification ❌ VoiceRecognition ❌ Turnstile ❌ Cloudflare Challenge
 
 Verbose level
 -
 
+
 ```javascript
-const handler = new CapSolver(apikey, verbose); // on handler initialization
+// on CapSolver handler definition
+const handler = new CapSolver(apikey, verbose); 
 ```
 
-Verbose level `undefined || 0`: Dont print logs, just get response.
+Verbose level `undefined` or `0`: Dont print logs, just handle for solution.
 
-Verbose level `1`: Print logs about performed requests during execution.
+Verbose level `1`: Only log task status in console.
 
-Verbose level `2`: Appends full capsolver api response in verbose level 1 outputs.
+Verbose level `2`: Log API response in console.
 
-References
+
+📁 Working examples
 -
 
-- [**HCaptchaClassification: Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
-    - Responds through image recognition.
-    - Send a base64 **images array** with `.hcaptchaclassification(question, queries, coordinate)`.
-    - 👀 Find [**here**](https://github.com/0qwertyy/puppeteer-extra-plugin-capsolver) an **integration within `puppeteer-extra`**.
-
-- [**FunCaptchaClassification (beta): Recognize the images that you need to click.**](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/426261/HCaptchaClassification+recognize+the+images+that+you+need+to+click)
-    - Send a base64 **screenshot image** with `.funcaptchaclassification(image, question)`.
-
-- [**AntiKasadaTask: Solving Kasada.**](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/426407/AntiKasadaTask+solving+Kasada)
-    - This task type AntiKasadaTask require that you send us your proxies.
-
-- [**AntiAkamaiBMPTask: Solving Akamai Mobile.**](https://captchaai.atlassian.net/wiki/spaces/capsolver/pages/426407/AntiKasadaTask+solving+Kasada)
-    - This task type AntiKasadaTask require that you send us your proxies.
+**Figure out [here](https://github.com/0qwertyy/capsolver-npm/tree/master/examples) all supported captcha examples.**
