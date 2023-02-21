@@ -48,25 +48,6 @@ if(b > 0){  // usd balance
 }
 ```
 
-*example: run for one hcaptcha token w/ custom proxy (`.hcaptcha()`):*
-
-```javascript
-const CapSolver = require('capsolver-npm');
-const handler = new CapSolver('apikey', 1); // verbose level 1
-let b = await handler.balance();
-if(b > 0){  // usd balance
-    await handler.hcaptcha(
-        'https://websiteurl.com/', 
-        '000000-000000000-0000000',
-        { proxy: "proxyType:proxyAddress:proxyPort:proxyLogin:proxyPassword" }   // fast way to use proxy
-    )
-    .then(async response => {
-        if(response.error === 0){ console.log(response.solution) }
-        else{ console.log('error ' + JSON.stringify(response.apiResponse)) }
-    });
-}
-```
-
 **2️⃣ Run any task and build `taskData` schema for a task type.**
 
 **Check task parameters at [official docs](https://docs.capsolver.com/guide/recognition/ImageToTextTask.html) in order to bind manually captcha tasks.**
@@ -81,6 +62,8 @@ const taskData =    // build a task
     websiteURL : "https://website.com/", 
     websiteKey : "000000-00000-000000-000000000",
     proxyInfo: {
+        // string format also supported
+        // "proxy": "proxy.provider.io:23331:user1:password1",
         "proxyType": "http",
         "proxyAddress": "ip_address",
         "proxyPort": 3221,
