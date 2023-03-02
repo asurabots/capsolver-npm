@@ -2,9 +2,8 @@ const CapSolver = require('../src/CapSolver');
 const handler = new CapSolver('CAI-XXXX ...');
 
 (async function() {
-    await handler.antiturnstile(
-        'https://website.com/',
-        'sitekey',
+    await handler.anticloudflare(
+        'https://minecraftpocket-servers.com/login/',
         {'proxy': 'proxy.provider.io:23331:user1:password1'},
         {'type':'challenge'}
     ).then((captcha) => { if(captcha.error !== 0){ console.log(captcha.apiResponse) }else{ console.log(captcha.solution) } })
