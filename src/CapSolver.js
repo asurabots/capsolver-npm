@@ -2,7 +2,7 @@ const Tasker = require("./Tasker");
 const axios = require("axios");
 
 /**
- * CapSolver.io Tasks Handler
+ * CapSolver.com Tasks Handler
  */
 class CapSolver {
     constructor(apikey, verbose=0, rqdelay=1700) { this.apikey = apikey; this.verbose = verbose; this.rqdelay = rqdelay; this.init(); }
@@ -69,7 +69,7 @@ class CapSolver {
         }
     }
 
-    /** Fast-bind methods **/
+    /** Task methods **/
 
     /** mtcaptcha **/
     async mtcaptcha(websiteURL, websiteKey, proxyInfo){
