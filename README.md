@@ -3,11 +3,10 @@
 - ❗ An API key it's **required**. [**Get here.**](https://dashboard.capsolver.com/passport/register?inviteCode=CHhA_5os)
 - 👀 **Puppeteer integration at**  [**puppeteer-extra-plugin-capsolver**](https://github.com/0qwertyy/puppeteer-extra-plugin-capsolver).
 
-
 now binded: *🔥 AntiTurnstile. 🔥 AntiCloudflare. 🔥 Geetest V4.*
 
-[![](https://img.shields.io/badge/1.0.1-capsolver--npm-blue?logo=npm&logoColor=white)](https://www.npmjs.com/package/capsolver-npm)
-[![](https://img.shields.io/badge/documentation-docs.capsolver.com-blue)](https://docs.capsolver.com/guide/getting-started.html)
+[![](https://img.shields.io/badge/1.0.2-capsolver--npm-darkgreen?logo=npm&logoColor=white)](https://www.npmjs.com/package/capsolver-npm)
+[![](https://img.shields.io/badge/documentation-docs.capsolver.com-darkgreen)](https://docs.capsolver.com/guide/getting-started.html)
 
 ⬇️ Install
 -
@@ -19,7 +18,7 @@ now binded: *🔥 AntiTurnstile. 🔥 AntiCloudflare. 🔥 Geetest V4.*
 1. Import module.
 
    ```javascript 
-    const CapSolver = require('capsolver-npm');
+    const CapSolver = require("capsolver-npm");
     ```
 2. Define tasks handler (singleton).
 
@@ -31,19 +30,19 @@ now binded: *🔥 AntiTurnstile. 🔥 AntiCloudflare. 🔥 Geetest V4.*
 
 **❗ 2 version for handle captcha tasks results are the followind:**
 
-**1️⃣ task-bind methods** (handle task results in one step)
+**1️⃣ task methods** (handle task results in one step)
 
 *example: check capsolver.com balance + run for one hcaptcha token (`.hcaptchaproxyless()`):*
 
 ```javascript
-const CapSolver = require('capsolver-npm');
-const handler = new CapSolver('apikey', 1); // verbose level 1
+const CapSolver = require("capsolver-npm");
+const handler = new CapSolver("CAI-XXXX ...", 1); // verbose level 1
 let b = await handler.balance();
 if(b > 0){  // usd balance
-    await handler.hcaptchaproxyless('https://websiteurl.com/', '000000-000000000-0000000')
+    await handler.hcaptchaproxyless("https://websiteurl.com/", "000000-000000000-0000000")
         .then(async response => {
             if(response.error === 0){ console.log(response.solution) }
-            else{ console.log('error ' + JSON.stringify(response.apiResponse)) }
+            else{ console.log("error " + JSON.stringify(response.apiResponse)) }
         });
 }
 ```
@@ -55,7 +54,7 @@ if(b > 0){  // usd balance
 *example: run for one hcaptcha token w/ custom proxy (.runAnyTask()):*
 ```javascript
 const CapSolver = require("capsolver-npm");
-const handler = new CapSolver("apikey");
+const handler = new CapSolver("CAI-XXXX ...");
 const taskData =    // build a task
     { 
     type : "HCaptchaTask",
@@ -123,10 +122,10 @@ handler.runAnyTask(taskData)
 
 # 📖 Supported captcha tasks
 
-| Method                               | Returns                                                                                                                                                               |
-|:-------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `await handler.balance()` | get balance as float number |
-| `await handler.runAnyTask(taskData)` | CapSolver API response |
+| Method                               | Returns                        |
+|:-------------------------------------|:-------------------------------|
+| `await handler.balance()` | get balance as float number    |
+| `await handler.runAnyTask(taskData)` | not use a specific task method |
 
 Custom proxy usage (proxyInfo schema):
 
@@ -149,8 +148,16 @@ const proxyInfo = {
 
 *(proxyLogin & proxyPassword are optionals)*
 
-task-bin methods:
+task-bind methods:
 -
+
+⚙️ **Cloudflare**
+
+```javascript
+// * check required parameters for a website with API docs.
+await handler.anticloudflare(websiteURL, proxyInfo, metadata, html)
+await handler.antiturnstile(websiteURL, websiteKey, proxyInfo, metadata)
+```
 
 ⚙️ **HCaptcha**
 
@@ -158,7 +165,6 @@ task-bin methods:
 Parameter `queries`: base64 images array
 
 ```javascript
-// * check required parameters for a website with API docs.
 await handler.hcaptcha(websiteURL, websiteKey, proxyInfo, userAgent, isInvisible, enterprisePayload)
 await handler.hcaptchaproxyless(websiteURL, websiteKey, userAgent, isInvisible, enterprisePayload)
 await handler.hcaptchaclassification(question, base64)
