@@ -43,7 +43,8 @@ class Tasker {
                 if(self.verbose === 2){ console.log(error.response.data); }
                 return { 'error':-1, 'statusText':error.response.status, 'apiResponse':error.response.data }
             });
-        if(this.verbose === 1){ console.log('[' + this.taskData.type + '][created task][' + handled.apiResponse.taskId + ']'); }
+        if(this.verbose === 1){ if(handled.error === 0){ console.log('[' + this.taskData.type + '][created task][' + handled.apiResponse.taskId + ']'); } else { console.log('[' + this.taskData.type + '][failed][' + handled.apiResponse.errorCode + ']'); } }
+        if(this.verbose === 2){ console.log(handled.apiResponse); }
         return handled;
     }
 
@@ -93,7 +94,7 @@ class Tasker {
                     if(taskData[parameter.name] === undefined
                         || String(taskData[parameter.name]).length <= 0
                         || typeof taskData[parameter.name] !== parameter.type){
-                        throw TypeError(parameter.name+' must by of type '+parameter.type+' and not empty.');
+                        throw TypeError(parameter.name + ' must by of type ' + parameter.type + ' and not empty.');
                     }
                 }else{
                     if(taskData[parameter.name] !== undefined || null){
