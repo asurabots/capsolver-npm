@@ -5,7 +5,7 @@
 
 now binded: *🔥 AntiTurnstile. 🔥 AntiCloudflare. 🔥 Geetest V4.*
 
-[![](https://img.shields.io/badge/1.0.2-capsolver--npm-darkgreen?logo=npm&logoColor=white)](https://www.npmjs.com/package/capsolver-npm)
+[![](https://img.shields.io/badge/1.0.3-capsolver--npm-darkgreen?logo=npm&logoColor=white)](https://www.npmjs.com/package/capsolver-npm)
 [![](https://img.shields.io/badge/documentation-docs.capsolver.com-darkgreen)](https://docs.capsolver.com/guide/getting-started.html)
 
 ⬇️ Install
